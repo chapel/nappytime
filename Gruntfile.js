@@ -31,10 +31,50 @@ module.exports = function (grunt) {
         },
         files: reactFiles
       }
+    },
+    watch: {
+      jsx: {
+        files: 'react/**/*.jsx',
+        tasks: ['react'],
+        options: {
+          debounceDelay: 250
+        }
+      }
+    },
+    nodemon: {
+      dev: {
+        options: {
+          file: 'server.js',
+          ignoredFiles: [
+            'README.md', 'node_modules/**', 
+            'public/**', 'bower_components/**'
+          ],
+          watchedExtensions: ['js', 'hbs'],
+          delayTime: 1,
+          legacyWatch: true,
+          env: {
+            PORT: '8000'
+          },
+          cwd: __dirname
+        }
+      }
+    },
+    concurrent: {
+      dev: {
+        tasks: ['nodemon', 'watch'],
+        options: {
+            logConcurrentOutput: true
+        }
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-bower-task');
   grunt.loadNpmTasks('grunt-react');
   //grunt.loadNpmTasks('grunt-browserify');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-nodemon');
+  grunt.loadNpmTasks('grunt-concurrent');
+
+  grunt.registerTask('default', ['concurrent:dev']);
 };
