@@ -7,7 +7,15 @@ var cloak = require('cloak');
 var isProduction = (process.env.NODE_ENV === 'production');
 var port = (isProduction ? 80 : 8000);
 
-var server = Hapi.createServer('localhost', port);
+var hapiOptions = {
+  views: {
+    engines: { 'hbs': 'handlebars' },
+    path: __dirname + '/templates',
+    layout: true
+  }
+};
+
+var server = Hapi.createServer('localhost', port, hapiOptions);
 
 cloak.configure({
   port: 8080,
@@ -20,7 +28,7 @@ cloak.configure({
 
 cloak.run();
 
-server.route({
+var staticRouter = {
   path: '/{path*}',
   method: 'GET',
   handler: {
@@ -28,7 +36,21 @@ server.route({
       path: './public/'
     }
   }
-});
+};
+
+var indexRouter = {
+  path: '/',
+  method: 'GET',
+  handler: function (req) {
+    var context = {
+      title: 'Test',
+      message: 'Testing 123'
+    };
+    req.reply.view('pages/index', context);
+  }
+}
+
+server.route([ indexRouter, staticRouter ]);
 
 server.start(function (err) {
   if (err) { console.error(err); process.exit(-1); }
