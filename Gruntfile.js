@@ -2,6 +2,9 @@ var path = require('path');
 
 module.exports = function (grunt) {
 
+  var reactFiles = {};
+  reactFiles[(__dirname + '/public/js/react')] = (__dirname + '/react/src');
+
   grunt.initConfig({
     bower: {
       install: {
@@ -19,8 +22,19 @@ module.exports = function (grunt) {
           }
         }
       }
+    },
+    react: {
+      app: {
+        options: {
+          extension: 'js',  // Default,
+          ignoreMTime:  false // Default
+        },
+        files: reactFiles
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-bower-task');
+  grunt.loadNpmTasks('grunt-react');
+  //grunt.loadNpmTasks('grunt-browserify');
 };

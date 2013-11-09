@@ -3,6 +3,7 @@ require('nko')('fYjH9Hq69TrED2ao');
 
 var Hapi = require('hapi');
 var cloak = require('cloak');
+var moment = require('moment');
 
 var isProduction = (process.env.NODE_ENV === 'production');
 var port = (isProduction ? 80 : 8000);
@@ -48,9 +49,20 @@ var indexRouter = {
     };
     req.reply.view('pages/index', context);
   }
+};
+
+var timeRouter = {
+  path: '/time',
+  method: 'GET',
+  handler: function (req) {
+    var context = {
+      time: moment().format('h:mm:ss a')
+    };
+    req.reply(context);
+  }
 }
 
-server.route([ indexRouter, staticRouter ]);
+server.route([ indexRouter, staticRouter, timeRouter ]);
 
 server.pack.require('bucker', function (err) {
   if (err) console.error('failed loading bucker');
