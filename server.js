@@ -8,11 +8,18 @@ var port = (isProduction ? 80 : 8000);
 var server = Hapi.createServer('localhost', port);
 
 server.route({
-  path: '/',
+  path: '/{path*}',
   method: 'GET',
+  /*
   handler: function (request, reply) {
     var voteko = '<iframe src="http://nodeknockout.com/iframe/nappytime" frameborder=0 scrolling=no allowtransparency=true width=115 height=25></iframe>';
     reply('<html><body>' + voteko + '</body></html>\n');
+  }
+  */
+  handler: {
+    directory: {
+      path: './public/'
+    }
   }
 });
 
