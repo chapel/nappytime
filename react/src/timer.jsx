@@ -5,7 +5,7 @@ var Timer = React.createClass({
   },
   componentWillMount: function() {
     this.loadFromServer ();
-    setInterval(this.loadFromServer, this.props.pollInterval);
+    //setInterval(this.loadFromServer, this.props.pollInterval);
   },
   loadFromServer: function () {
     var self = this;
