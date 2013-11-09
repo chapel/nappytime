@@ -1,21 +1,28 @@
 // https://github.com/nko4/website/blob/master/module/README.md#nodejs-knockout-deploy-check-ins
 require('nko')('fYjH9Hq69TrED2ao');
 
-var isProduction = (process.env.NODE_ENV === 'production');
 var Hapi = require('hapi');
+var cloak = require('cloak');
+
+var isProduction = (process.env.NODE_ENV === 'production');
 var port = (isProduction ? 80 : 8000);
 
 var server = Hapi.createServer('localhost', port);
 
+cloak.configure({
+  port: 8080,
+  messages: {
+    test: function (msg, user) {
+      user.getRoom().messageMembers('test', msg);
+    }
+  }
+});
+
+cloak.run();
+
 server.route({
   path: '/{path*}',
   method: 'GET',
-  /*
-  handler: function (request, reply) {
-    var voteko = '<iframe src="http://nodeknockout.com/iframe/nappytime" frameborder=0 scrolling=no allowtransparency=true width=115 height=25></iframe>';
-    reply('<html><body>' + voteko + '</body></html>\n');
-  }
-  */
   handler: {
     directory: {
       path: './public/'

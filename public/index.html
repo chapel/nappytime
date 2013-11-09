@@ -21,8 +21,12 @@
         <link rel="stylesheet" href="css/main.css">
 
         <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        <script src="js/vendor/underscore-min.js"></script>
+        <script src="js/socket.io.min.js"></script>
+        <script src="js/cloak-client.js"></script>
     </head>
     <body>
+      <iframe src="http://nodeknockout.com/iframe/nappytime" frameborder=0 scrolling=no allowtransparency=true width=115 height=25></iframe>
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
@@ -113,6 +117,25 @@
             (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
             g.src='//www.google-analytics.com/ga.js';
             s.parentNode.insertBefore(g,s)}(document,'script'));
+        </script>
+        <script>
+          cloak.configure({
+            messages: {
+              test: function (msg) {
+                alert(msg);
+              }
+            },
+            serverEvents: {
+              connect: function () {
+                console.log('test')
+                setTimeout(function () {
+                  cloak.message('test', 'foobar');
+                }, 500)
+              }
+            }
+          });
+
+          cloak.run('http://localhost:8080');
         </script>
     </body>
 </html>
