@@ -2,9 +2,9 @@
 require('nko')('fYjH9Hq69TrED2ao');
 
 var Hapi = require('hapi');
-var cloak = require('cloak');
 var moment = require('moment');
 var Yelp = require('yelp');
+var faye = require('faye');
 
 var isProduction = (process.env.NODE_ENV === 'production');
 var port = (isProduction ? 80 : 8000);
@@ -20,16 +20,9 @@ var hapiOptions = {
 
 var server = Hapi.createServer('', port, hapiOptions);
 
-cloak.configure({
-  port: 8080,
-  messages: {
-    test: function (msg, user) {
-      user.getRoom().messageMembers('test', msg);
-    }
-  }
-});
+var bayeux = new faye.NodeAdapter({mount: '/realtime'});
 
-cloak.run();
+bayeux.attach(server.listener);
 
 var staticRouter = {
   path: '/{path*}',

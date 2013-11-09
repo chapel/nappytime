@@ -3,22 +3,17 @@
   "version": "1.0.0",
   "dependencies": {
     "react": "~0.5",
-    "underscore": "~1.5.2",
-    "socket.io-client": "~0.9.16",
-    "cloak": "https://github.com/incompl/cloak.git#~0.1.0"
+    "underscore": "~1.5.2"
   },
   "exportsOverride": {
     "react": {
       "js": "**/react.min.js"
     },
     "underscore": {
-      "js": "**/underscore-min.js"
-    },
-    "socket.io-client": {
-      "js": "**/dist/socket.io.min.js"
-    },
-    "cloak": {
-      "js": "**/src/client/cloak.js"
+      "js": [
+        "**/underscore-min.js",
+        "**/underscore-min.map"
+      ]
     }
   }
 }
