@@ -2,16 +2,28 @@
 require('nko')('fYjH9Hq69TrED2ao');
 
 var isProduction = (process.env.NODE_ENV === 'production');
-var http = require('http');
+var Hapi = require('hapi');
 var port = (isProduction ? 80 : 8000);
 
-http.createServer(function (req, res) {
-  // http://blog.nodeknockout.com/post/35364532732/protip-add-the-vote-ko-badge-to-your-app
-  var voteko = '<iframe src="http://nodeknockout.com/iframe/nappytime" frameborder=0 scrolling=no allowtransparency=true width=115 height=25></iframe>';
+var server = Hapi.createServer('localhost', port);
 
-  res.writeHead(200, {'Content-Type': 'text/html'});
-  res.end('<html><body>' + voteko + '</body></html>\n');
-}).listen(port, function(err) {
+server.route({
+  path: '/{path*}',
+  method: 'GET',
+  /*
+  handler: function (request, reply) {
+    var voteko = '<iframe src="http://nodeknockout.com/iframe/nappytime" frameborder=0 scrolling=no allowtransparency=true width=115 height=25></iframe>';
+    reply('<html><body>' + voteko + '</body></html>\n');
+  }
+  */
+  handler: {
+    directory: {
+      path: './public/'
+    }
+  }
+});
+
+server.start(function (err) {
   if (err) { console.error(err); process.exit(-1); }
 
   // if run as root, downgrade to the owner of this file
