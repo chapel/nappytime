@@ -11,6 +11,7 @@ var hapiOptions = {
   views: {
     engines: { 'hbs': 'handlebars' },
     path: __dirname + '/templates',
+    partialsPath: __dirname + '/templates/pages',
     layout: true
   }
 };
@@ -43,8 +44,7 @@ var indexRouter = {
   method: 'GET',
   handler: function (req) {
     var context = {
-      title: 'Test',
-      message: 'Testing 123'
+      title: 'Nappytime Project'
     };
     req.reply.view('pages/index', context);
   }
