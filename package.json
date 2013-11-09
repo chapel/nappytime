@@ -11,7 +11,8 @@
     "url": "git@github.com:nko4/nappytime.git"
   },
   "dependencies": {
-    "nko": "*"
+    "nko": "*",
+    "hapi": "~1.16.0"
   },
   "engines": {
     "node": "0.10.x"
