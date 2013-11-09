@@ -4,7 +4,8 @@
   "dependencies": {
     "react": "~0.5",
     "underscore": "~1.5.2",
-    "socket.io-client": "~0.9.16"
+    "socket.io-client": "~0.9.16",
+    "cloak": "https://github.com/incompl/cloak.git#~0.1.0"
   },
   "exportsOverride": {
     "react": {
@@ -15,6 +16,9 @@
     },
     "socket.io-client": {
       "js": "**/dist/socket.io.min.js"
+    },
+    "cloak": {
+      "js": "**/src/client/cloak.js"
     }
   }
 }
