@@ -4,6 +4,7 @@ require('nko')('fYjH9Hq69TrED2ao');
 var Hapi = require('hapi');
 var cloak = require('cloak');
 var moment = require('moment');
+var Yelp = require('yelp');
 
 var isProduction = (process.env.NODE_ENV === 'production');
 var port = (isProduction ? 80 : 8000);
@@ -40,14 +41,24 @@ var staticRouter = {
   }
 };
 
+var yelp = Yelp.createClient({
+  consumer_key: 'rlm-bHN4rJU7lmhq_AhsCg',
+  consumer_secret: 'GcAt39iGZf4s5M1YBpq3Fpporjc',
+  token: 'MAeeMz6IXEyOi_nRBTfwqOD9ELGs0i7R',
+  token_secret: 'kYTJgE1rFnwoIrVGoIBCluJTGYQ'
+});
+
 var indexRouter = {
   path: '/',
   method: 'GET',
   handler: function (req) {
-    var context = {
-      title: 'Nappytime Project'
-    };
-    req.reply.view('pages/index', context);
+    yelp.search({term: 'restaurants', location: '444 Castro St Mountain View', sort: 1, radius_filter: 8000}, function (err, data) {
+      var context = {
+        title: 'Nappytime Project',
+        restaurants: data.businesses
+      };
+      req.reply.view('pages/index', context);
+    });
   }
 };
 
