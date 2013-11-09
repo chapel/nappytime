@@ -16,7 +16,7 @@ var hapiOptions = {
   }
 };
 
-var server = Hapi.createServer('localhost', port, hapiOptions);
+var server = Hapi.createServer('', port, hapiOptions);
 
 cloak.configure({
   port: 8080,
