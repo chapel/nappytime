@@ -7,17 +7,11 @@
   line-height: 25px;
 }
 
+#room > div {
+  padding: 5px;
+  border: 1px solid black;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+[data-mode="edit"] button.edit {
+  display: none;
+}
