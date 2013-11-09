@@ -1,0 +1,12 @@
+{
+  "name": "nko4-nappytime",
+  "version": "1.0.0",
+  "dependencies": {
+    "react": "~0.5"
+  },
+  "exportsOverride": {
+    "react": {
+      "js": "**/react.min.js"
+    }
+  }
+}
