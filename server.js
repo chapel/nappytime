@@ -34,7 +34,7 @@ var staticRouter = {
   method: 'GET',
   handler: {
     directory: {
-      path: './public/'
+      path: __dirname + '/public/'
     }
   }
 };
