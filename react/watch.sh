@@ -12,4 +12,4 @@ SOURCE="${DIR}/src/"
 mkdir -p ${DEST}
 
 echo "watching ${SOURCE}, deploying to ${DEST}.."
-jsx --watch ${SOURCE} ${DEST}
+jsx -x jsx --watch ${SOURCE} ${DEST}

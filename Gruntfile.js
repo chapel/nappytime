@@ -26,7 +26,7 @@ module.exports = function (grunt) {
     react: {
       app: {
         options: {
-          extension: 'js',  // Default,
+          extension: 'jsx',  // Default,
           ignoreMTime:  false // Default
         },
         files: reactFiles
