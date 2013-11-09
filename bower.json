@@ -2,11 +2,19 @@
   "name": "nko4-nappytime",
   "version": "1.0.0",
   "dependencies": {
-    "react": "~0.5"
+    "react": "~0.5",
+    "underscore": "~1.5.2",
+    "socket.io-client": "~0.9.16"
   },
   "exportsOverride": {
     "react": {
       "js": "**/react.min.js"
+    },
+    "underscore": {
+      "js": "**/underscore-min.js"
+    },
+    "socket.io-client": {
+      "js": "**/dist/socket.io.min.js"
     }
   }
 }

@@ -6,6 +6,7 @@ module.exports = function (grunt) {
     bower: {
       install: {
         options: {
+          verbose: true,
           targetDir: './public',
           layout: function (type, component) {
             var renamedType = type;
