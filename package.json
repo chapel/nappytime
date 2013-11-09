@@ -13,7 +13,9 @@
   "dependencies": {
     "nko": "*",
     "hapi": "~1.16.0",
-    "cloak": "~0.1.0"
+    "cloak": "~0.1.0",
+    "handlebars": "~1.1.2",
+    "bucker": "~0.6.4"
   },
   "engines": {
     "node": "0.10.x"

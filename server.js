@@ -52,6 +52,10 @@ var indexRouter = {
 
 server.route([ indexRouter, staticRouter ]);
 
+server.pack.require('bucker', function (err) {
+  if (err) console.error('failed loading bucker');
+});
+
 server.start(function (err) {
   if (err) { console.error(err); process.exit(-1); }
 
