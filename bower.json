@@ -2,8 +2,8 @@
   "name": "nko4-nappytime",
   "version": "1.0.0",
   "dependencies": {
-    "react": "~0.5",
-    "underscore": "~1.5.2"
+    "react": "0.5",
+    "underscore": "1.5.2"
   },
   "exportsOverride": {
     "react": {

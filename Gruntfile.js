@@ -32,6 +32,20 @@ module.exports = function (grunt) {
         files: reactFiles
       }
     },
+    browserify: {
+      dist: {
+        options: {
+          debug: true,
+          transform: [require('grunt-react').browserify]
+        },
+        shim: {
+        },
+        files: {
+          'public/js/main.js': ['client/*.js'],
+          'public/js/components.js': ['react/src/*.jsx']
+        }
+      }
+    },
     watch: {
       jsx: {
         files: 'react/**/*.jsx',
@@ -71,10 +85,12 @@ module.exports = function (grunt) {
 
   grunt.loadNpmTasks('grunt-bower-task');
   grunt.loadNpmTasks('grunt-react');
-  //grunt.loadNpmTasks('grunt-browserify');
+  grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-nodemon');
   grunt.loadNpmTasks('grunt-concurrent');
 
   grunt.registerTask('default', ['concurrent:dev']);
+
+  grunt.registerTask('build', ['bower', 'browserify']);
 };

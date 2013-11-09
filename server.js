@@ -2,8 +2,8 @@
 require('nko')('fYjH9Hq69TrED2ao');
 
 var Hapi = require('hapi');
-var faye = require('faye');
 var _ = require('lodash');
+var realtime = require('./realtime');
 
 var isProduction = (process.env.NODE_ENV === 'production');
 var port = (isProduction ? 80 : 8000);
@@ -23,10 +23,6 @@ server.app.commonContext = {
   title: 'Nappytime Project'
 };
 
-var bayeux = new faye.NodeAdapter({mount: '/realtime'});
-
-bayeux.attach(server.listener);
-
 server.route([ 
   require('./routes/static'), 
   require('./routes/index'), 
@@ -39,6 +35,8 @@ server.pack.require('bucker', function (err) {
 
 server.start(function (err) {
   if (err) { console.error(err); process.exit(-1); }
+
+  server.app.realtime = realtime(server.listener);
 
   // if run as root, downgrade to the owner of this file
   if (process.getuid() === 0) {
