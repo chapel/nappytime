@@ -10,9 +10,12 @@ var Home = module.exports = React.createClass({
     }
   },
   getLocation: function () {
+    var self = this;
     if (Modernizr.geolocation) {
       navigator.geolocation.getCurrentPosition(function (pos) {
-        console.log(pos)
+        var locationDom = self.refs.location.getDOMNode();
+        locationDom.value = 'Latitude: ' + pos.coords.latitude + ', Longitude: ' + pos.coords.longitude;
+        self.state.coords = pos.coords;
       });
     }
   },
@@ -20,12 +23,20 @@ var Home = module.exports = React.createClass({
     var options = {};
     options.name = this.refs.roomname.getDOMNode().value.trim();
     options.location = this.refs.location.getDOMNode().value.trim();
+    options.coords = this.state.coords;
     var name = this.refs.name.getDOMNode().value.trim() || 'Anonymous';
     store.set('name', name);
-    if (!options.name || !options.location) {
+    if (!options.name || (!options.location || !options.coords)) {
       return false;
     }
-    window.location.href = '/room/new?location=' + options.location + '&name=' + options.name;
+    var name = 'name=' + options.name;
+    var location;
+    if (options.coords) {
+      location = 'lat=' + options.coords.latitude + '&lng=' + options.coords.longitude;
+    } else {
+      location = 'location=' + options.location;
+    }
+    window.location.href = '/room/new?' + location + '&' + name;
     return false;
   },
   render: function () {

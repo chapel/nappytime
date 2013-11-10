@@ -5,7 +5,14 @@
   {{> footer}}
 </div> <!-- /container -->
 <script>
+  {{#if hasCoords}}
+  roomCoords = {
+    lat: '{{lat}}',
+    lng: '{{lng}}'
+  };
+  {{else}}
   roomLocation = '{{location}}';
+  {{/if}}
   roomName = '{{name}}';
   roomId = '{{id}}';
 </script>
