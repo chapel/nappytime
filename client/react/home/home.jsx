@@ -26,7 +26,7 @@ var Home = module.exports = React.createClass({
     options.coords = this.state.coords;
     var name = this.refs.name.getDOMNode().value.trim() || 'Anonymous';
     store.set('name', name);
-    if (!options.name || (!options.location || !options.coords)) {
+    if (!options.name || (!options.location && !options.coords)) {
       return false;
     }
     var name = 'name=' + options.name;
