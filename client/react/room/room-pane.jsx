@@ -5,8 +5,7 @@ var RoomPaneCategory = require('./room-pane-category.jsx');
 var RoomPane = module.exports = React.createClass({
   getInitialState: function () {
     return {
-      mode: 'frozen',
-      categories: this.props.categories
+      mode: 'frozen'
     };
   },
   componentWillMount: function() {
@@ -36,13 +35,13 @@ var RoomPane = module.exports = React.createClass({
     if (this.state.mode === 'edit') {
       if (typeof(restaurantIndex) === 'undefined') {
         // toggling whole category
-        var toggleCat = this.state.categories[categoryIndex];
+        var toggleCat = this.props.categories[categoryIndex];
         toggleCat.restaurants.forEach(function (eat) {
           eat.chosen = isChosen;
         }, this);
       } else {
         // toggling single restaurant
-        var toggleEat = this.state.categories[categoryIndex].restaurants[restaurantIndex];
+        var toggleEat = this.props.categories[categoryIndex].restaurants[restaurantIndex];
         toggleEat.chosen = isChosen;
       }
       this.setState();
@@ -50,7 +49,7 @@ var RoomPane = module.exports = React.createClass({
       // veto / roundChosen mode
       if (typeof(restaurantIndex) === 'undefined') {
         // veto by categories
-        var toggleCat = this.state.categories[categoryIndex];
+        var toggleCat = this.props.categories[categoryIndex];
         toggleCat.veto = !toggleCat.veto;
         if (toggleCat.veto) {
           this.setState({ vetoes: (this.state.vetoes || 0) + 1 });
@@ -59,11 +58,11 @@ var RoomPane = module.exports = React.createClass({
         }
       } else {
         // toggling single restaurant
-        var toggleEat = this.state.categories[categoryIndex].restaurants[restaurantIndex];
+        var toggleEat = this.props.categories[categoryIndex].restaurants[restaurantIndex];
         toggleEat.roundChosen = !toggleEat.roundChosen;
         if (this.state.roundChosen) {
           var ij = this.state.roundChosen;
-          delete this.state.categories[ij[0]].restaurants[ij[1]].roundChosen;
+          delete this.props.categories[ij[0]].restaurants[ij[1]].roundChosen;
         }
         if (toggleEat.roundChosen) {
           this.setState({ roundChosen: [categoryIndex, restaurantIndex] });
@@ -71,7 +70,6 @@ var RoomPane = module.exports = React.createClass({
           this.setState({ roundChosen: null });
         }
       }
-      console.log(arguments);
     }
   },
   doesCatHaveChosen: function (cat) {
@@ -86,8 +84,8 @@ var RoomPane = module.exports = React.createClass({
   },
   isAnyCatChosen: function () {
     var hasChosen = false;
-    for (var i = 0; i < this.state.categories.length; i++) {
-      var cat = this.state.categories[i];
+    for (var i = 0; i < this.props.categories.length; i++) {
+      var cat = this.props.categories[i];
       if (this.doesCatHaveChosen(cat)) {
         hasChosen = true;
         break;
