@@ -6,32 +6,43 @@ var RoomPaneCategory = module.exports = React.createClass({
   getInitialState: function () {
     return {};
   },
+  doesCatHaveChosen: function () {
+    var restaurants = this.props.data.value;
+    var hasChosen = false;
+    for (var i = 0; i < restaurants.length; i++) {
+      if (restaurants[i].chosen) {
+        hasChosen = true;
+        break;
+      }
+    }
+    return hasChosen;
+  },
   render: function () {
-    var restaurants = this.props.data;
+    var cat = this.props.data
+      , name = cat.name
+      , restaurants = cat.value;
+    var catClass = "list-group-item room-cat";
+    if (this.doesCatHaveChosen()) {
+      catClass += " chosen";
+    }
     var rendered = restaurants
-    .filter(function (cat) {
-      if (this.state.mode === 'edit') {
+    .filter(function (eat) {
+      if (this.props.mode === 'edit') {
         return true;
       } else {
-        return cat.chosen;
+        return this.doesCatHaveChosen();
       }
     }, this)
-    .map(function (cat) {
-      var catClass = "list-group-item room-cat";
-      if (cat.chosen) {
-        catClass += " chosen";
-      }
-      return (
-        <li className={catClass}>
-          <h4>{cat.name}</h4>
-          <RoomPaneRestaurant data={cat.value} />
-        </li>
-      );
+    .map(function (eat, index) {
+      return <RoomPaneRestaurant data={eat} index={index} parentIndex={this.props.index} mode={this.props.mode} />;
     }, this);
     return (
-      <ul className="list-group">
-        {this.rendered}
-      </ul>
+      <li className={catClass}>
+        <h4>{name}</h4>
+        <ul className="list-group">
+          {rendered}
+        </ul>
+      </li>
     );
   }
 });

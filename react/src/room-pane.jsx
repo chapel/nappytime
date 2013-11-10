@@ -79,17 +79,8 @@ var RoomPane = module.exports = React.createClass({
         return this.doesCatHaveChosen(cat);
       }
     }, this)
-    .map(function (cat) {
-      var catClass = "list-group-item room-cat";
-      if (this.doesCatHaveChosen(cat)) {
-        catClass += " chosen";
-      }
-      return (
-        <li className={catClass}>
-          <h4>{cat.name}</h4>
-          <RoomPaneCategory data={cat.value} />
-        </li>
-      );
+    .map(function (cat, index) {
+      return <RoomPaneCategory data={cat} index={index} mode={this.state.mode} />;
     }, this);
   },
   renderButton: function () {
