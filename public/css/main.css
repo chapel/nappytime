@@ -29,11 +29,15 @@
   margin: 5px 0 0 5px;
 }
 
-.buttonRow {
+.button-row {
   width: 100px;
 }
 
-.buttonRow > * {
+.button-row-fixed {
+  position: fixed;
+}
+
+.button-row-fixed > * {
   margin-bottom: 10px;
 }
 
@@ -45,9 +49,14 @@
   margin-left: 10px;
 }
 
-.restaurant-details {
-  background-color: #fff;
+.restaurant-details-wrapper {
   padding: 5px;
+  background-color: #fff;
+  margin: -5px -10px;
+}
+
+.restaurant-details-wrapper .media {
+  margin-top: 0;
 }
 
 .not-chosen {

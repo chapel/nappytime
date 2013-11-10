@@ -16,7 +16,7 @@ var RoomRestaurantDetails = module.exports = React.createClass({
           <h5 class="media-heading">{eat.name}</h5>
           <div><img class="media-object" src={eat.rating_img_url_small} alt="ratings" /></div>
           <div>
-            <span>{eat.location.address[0]} {eat.location.city}</span>
+            <span>{eat.location.address[0] + ' ' + eat.location.city}</span>
           </div>
           <div>
             <span>{eat.display_phone}</span>

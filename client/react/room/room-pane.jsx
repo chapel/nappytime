@@ -180,12 +180,14 @@ var RoomPane = module.exports = React.createClass({
             {this.renderCallToAction()}
             {this.renderCategories()}
           </td>
-          <td className="buttonRow">
-            {this.renderInfo()}
-            <div className="clearfix"></div>
-            {this.renderButtonEdit()}
-            <div className="clearfix"></div>
-            {this.renderButtonInit()}
+          <td className="button-row">
+            <div className="button-row-fixed">
+              {this.renderInfo()}
+              <div className="clearfix"></div>
+              {this.renderButtonEdit()}
+              <div className="clearfix"></div>
+              {this.renderButtonInit()}
+            </div>
           </td>
         </tr>
       </table>

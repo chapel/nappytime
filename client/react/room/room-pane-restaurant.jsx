@@ -30,8 +30,10 @@ var RoomPaneRestaurant = module.exports = React.createClass({
     }
     return (
       <li className={eatClass} onClick={this.onToggle}>
-        <span className="small">{eat.name} {this.renderLabel()}</span>
-        <RoomRestaurantDetails data={eat} />
+        <div className="restaurant-details-wrapper">
+          <span className="small">{eat.name} {this.renderLabel()}</span>
+          <RoomRestaurantDetails data={eat} />
+        </div>
       </li>
     );
   }
