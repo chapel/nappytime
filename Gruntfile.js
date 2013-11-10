@@ -33,22 +33,29 @@ module.exports = function (grunt) {
       }
     },
     browserify: {
-      dist: {
+      client: {
         options: {
-          debug: true,
-          transform: [require('grunt-react').browserify]
+          debug: true
         },
         shim: {
         },
         files: {
-          'public/js/main.js': ['client/*.js'],
-          'public/js/room.js': ['react/src/*.jsx']
+          'public/js/main.js': ['client/*.js']
+        }
+      },
+      components: {
+        options: {
+          debug: true,
+          transform: [require('grunt-react').browserify]
+        },
+        files: {
+          'public/js/components.js': ['react/src/*.jsx']
         }
       }
     },
     watch: {
-      jsx: {
-        files: 'react/**/*.jsx',
+      client: {
+        files: ['client/*.js', 'react/**/*.jsx'],
         tasks: ['browserify'],
         options: {
           debounceDelay: 250
@@ -61,7 +68,8 @@ module.exports = function (grunt) {
           file: 'server.js',
           ignoredFiles: [
             'README.md', 'node_modules/**', 
-            'public/**', 'bower_components/**'
+            'public/**', 'bower_components/**',
+            'client/**'
           ],
           watchedExtensions: ['js', 'hbs'],
           delayTime: 1,

@@ -29,7 +29,6 @@ var RoomPaneRestaurant = module.exports = React.createClass({
     }, this);
     return (
       <ul className="list-group">
-        {}
       </ul>
     );
   }

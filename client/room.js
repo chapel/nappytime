@@ -1,5 +1,19 @@
-var realtime = require('./realtime');
+var socket = require('./realtime');
+var utils = require('../lib/utils');
 
-realtime.on('update', function (data) {
-  console.log(data);
+var event = utils.subEvent('room');
+
+socket.on(event('joined'), function (res) {
+  console.log(res);
+});
+
+exports.createRoom = function (options, callback) {
+  socket.emit(event('create'), options, function (err, res) {
+    callback(err, res);
+    socket.emit('join', {room: 'test', name: 'foo'});
+  });
+};
+
+exports.createRoom({location: 'mountain view'}, function (err, res) {
+  console.log(err, res);
 });

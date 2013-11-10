@@ -1,9 +1,14 @@
 var socketio = require('socket.io');
+var utils = require('../lib/utils');
+
+var handlers = utils.requireDir(__dirname, ['index.js']);
 
 var realtime = {};
 
 function onConnection(socket) {
-  socket.emit('update', 'foobar');
+  handlers.forEach(function (handler) {
+    handler.attach(socket);
+  });
 }
 
 module.exports = function wrapper(http) {
