@@ -35,27 +35,29 @@ module.exports = function (grunt) {
     browserify: {
       client: {
         options: {
-          debug: true
+          debug: true,
+          alias: 'client/realtime/room.js:realtime/room'
         },
         shim: {
         },
         files: {
-          'public/js/main.js': ['client/*.js']
+          'public/js/main.js': ['client/**/*.js']
         }
       },
       components: {
         options: {
           debug: true,
-          transform: [require('grunt-react').browserify]
+          transform: [require('grunt-react').browserify],
+          external: ['realtime/room']
         },
         files: {
-          'public/js/components.js': ['react/src/*.jsx']
+          'public/js/room.js': ['client/react/*.jsx']
         }
       }
     },
     watch: {
       client: {
-        files: ['client/*.js', 'react/**/*.jsx'],
+        files: ['client/**/*.js', 'client/**/*.jsx'],
         tasks: ['browserify'],
         options: {
           debounceDelay: 250

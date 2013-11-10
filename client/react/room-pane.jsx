@@ -12,48 +12,6 @@ var RoomPane = module.exports = React.createClass({
     this.load();
   },
   load: function () {
-    this.setState({
-      restaurants: [
-        { 
-          name: 'Thai', 
-          value: [
-            {
-              name: 'Amarin',
-              location: 'Something',
-              chosen: true
-            }
-          ]
-        },
-        { 
-          name: 'Indian',
-          value: [
-            {
-              name: 'Sakoon',
-              location: 'Something',
-              chosen: true
-            },
-            {
-              name: 'Amber',
-              location: 'Something',
-              chosen: true
-            },
-            {
-              name: 'Shiva\'s',
-              location: 'Something'
-            }
-          ]
-        },
-        { 
-          name: 'Japanese',
-          value: [
-            {
-              name: 'SUSHITOMI',
-              location: 'Something'
-            }
-          ]
-        }
-      ]
-    });
   },
   toggleMode: function () {
     this.setState({
@@ -78,8 +36,8 @@ var RoomPane = module.exports = React.createClass({
   },
   doesCatHaveChosen: function (cat) {
     var hasChosen = false;
-    for (var i = 0; i < cat.value.length; i++) {
-      if (cat.value[i].chosen) {
+    for (var i = 0; i < cat.restaurants.length; i++) {
+      if (cat.restaurants[i].chosen) {
         hasChosen = true;
         break;
       }
@@ -87,14 +45,15 @@ var RoomPane = module.exports = React.createClass({
     return hasChosen;
   },
   renderCategories: function () {
-    return this.state.restaurants
+    var self = this;
+    return this.props.categories
     .filter(function (cat) {
-      if (this.state.mode === 'edit') {
+      if (self.state.mode === 'edit') {
         return true;
       } else {
-        return this.doesCatHaveChosen(cat);
+        return self.doesCatHaveChosen(cat);
       }
-    }, this)
+    })
     .map(function (cat, index) {
       return <RoomPaneCategory 
                 data={cat} 

@@ -2,7 +2,8 @@
 
 var RoomPeople = require('./room-people.jsx')
   , RoomPane = require('./room-pane.jsx')
-  , RoomModal = require('./room-modal.jsx');
+  , RoomModal = require('./room-modal.jsx')
+  , room = require('realtime/room');
 
 var Room = module.exports = React.createClass({
   getInitialState: function () {
@@ -12,19 +13,22 @@ var Room = module.exports = React.createClass({
     this.load();
   },
   load: function () {
+    this.setState(this.props.res);
   },
   render: function () {
     return (
       <div id="room">
         <RoomPeople />
-        <RoomPane />
+        <RoomPane categories={this.state.categories}/>
         <RoomModal />
       </div>
     );
   }
 });
 
-React.renderComponent(
-  <Room url="/realtime" />,
-  document.getElementById('room-container')
-);
+room.createRoom({location: 'mountain view'}, function (err, res) {
+  React.renderComponent(
+    <Room url="/realtime" res={res} />,
+    document.getElementById('room-container')
+  );
+});

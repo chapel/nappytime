@@ -25,7 +25,7 @@ function onCreate(options, callback) {
       return callback('Problem finding restaurants');
     }
 
-    callback(null, {data: res});
+    callback(null, res);
   });
 }
 

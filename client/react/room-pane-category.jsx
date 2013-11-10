@@ -7,7 +7,7 @@ var RoomPaneCategory = module.exports = React.createClass({
     return {};
   },
   doesCatHaveChosen: function () {
-    var restaurants = this.props.data.value;
+    var restaurants = this.props.data.restaurants;
     var hasChosen = false;
     for (var i = 0; i < restaurants.length; i++) {
       if (restaurants[i].chosen) {
@@ -25,7 +25,8 @@ var RoomPaneCategory = module.exports = React.createClass({
   render: function () {
     var cat = this.props.data
       , name = cat.name
-      , restaurants = cat.value;
+      , restaurants = cat.restaurants;
+    console.log(restaurants)
     var catClass = "list-group-item room-cat";
     if (this.doesCatHaveChosen()) {
       catClass += " chosen";
