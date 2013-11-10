@@ -14,7 +14,6 @@ exports.attach = function (socket, sio) {
   socket.on(event('create'), onCreate);
   socket.on(event('join'), onJoin);
   socket.on(event('save'), onSave);
-  socket.on(event('load'), onLoad);
 
   socket.on('disconnect', onDisconnect);
   socket.on('leave', onDisconnect);
@@ -64,10 +63,6 @@ function onSave(room, callback) {
       return callback(null, room.roomId);
     });
   });
-}
-
-function onLoad(options, callback) {
-  db.get('room', options.roomId, callback);
 }
 
 function onJoin(options, callback) {
