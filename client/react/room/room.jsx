@@ -24,7 +24,8 @@ var Room = module.exports = React.createClass({
           { name: 'Charlie', id: '789', state: 'finished' }
         ],
         me: {
-          name: 'Alice'
+          name: 'Alice',
+          isCreator: true
         }
       });
     });
@@ -35,8 +36,10 @@ var Room = module.exports = React.createClass({
   render: function () {
     return (
       <div id="room">
-        <RoomPeople people={this.state.people} />
-        <RoomPane categories={this.state.categories} getModal={this.getModal}/>
+        <RoomPeople people={this.state.people} me={this.state.me} />
+        <RoomPane categories={this.state.categories} 
+          me={this.state.me}
+          getModal={this.getModal}/>
         <RoomModal ref="modal" />
       </div>
     );

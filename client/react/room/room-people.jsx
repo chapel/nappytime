@@ -8,21 +8,20 @@ var PeoplePane = module.exports = React.createClass({
   },
   renderSmallMessage: function () {
     var msg = ""
-      , hasPicked = 0;
+      , hasPicked = 0
+      , me = this.props.me;
     if (!this.props.people.length) {
-      msg = "You're all alone...";
+      msg = "";
     } else {
       for (var i = 0; i < this.props.people.length; i++) {
-        if (this.props.people[i].state === 'finished') {
+        var person = this.props.people[i];
+        if (person.state === 'finished') {
           hasPicked += 1;
         }
       }
-      msg = hasPicked + " of " + this.props.people.length + " have chosen";
-      return (
-        <h3>{msg}</h3>
-      )
+      msg = hasPicked + " of " + this.props.people.length + ", including me, have chosen";
     }
-    return msg;
+    return <h3>{msg}</h3>;
   },
   toggleMode: function () {
     this.setState({
@@ -33,7 +32,11 @@ var PeoplePane = module.exports = React.createClass({
     return this.renderSmallMessage();
   },
   renderPeople: function () {
-    return this.props.people.map(function (person) {
+    return this.props.people
+    .filter(function (person) {
+      return person.name !== this.props.me.name;
+    }, this)
+    .map(function (person) {
       var personClass = 'pull-left label label-';
       if (person.state === 'waiting') {
         personClass += 'warning';

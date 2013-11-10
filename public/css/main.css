@@ -22,6 +22,7 @@
 
 #room .room-people {
   cursor: pointer;
+  color: #fff;
 }
 
 #room .room-people .label {
