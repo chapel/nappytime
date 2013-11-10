@@ -24,7 +24,7 @@ var RoomPane = module.exports = React.createClass({
     }
   },
   initDone: function () {
-    this.props.getModal().open();
+    this.props.getModal().startCountdown();
   },
   toggleMode: function () {
     this.setState({

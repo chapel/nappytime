@@ -1,4 +1,5 @@
 /** @jsx React.DOM */
+var RoomCountdown = require('./room-countdown.jsx');
 
 var RoomModal = module.exports = React.createClass({
   getInitialState: function () {
@@ -20,25 +21,27 @@ var RoomModal = module.exports = React.createClass({
   open: function() {
     $(this.getDOMNode()).modal('show');
   },
+  startCountdown: function () {
+    this.setState({
+      mode: 'countdown'
+    });
+    this.open();
+  },
   renderBody: function () {
-    return (
-      <div>Modal</div>
-    );
+    if (this.state.mode === 'countdown') {
+      return (
+        <RoomCountdown countdown={30} />
+      );
+    } else {
+      return <div></div>;
+    }
   },
   render: function () {
     return (
       <div className="modal fade">
         <div className="modal-dialog">
           <div className="modal-content">
-            <div className="modal-header">
-              <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            </div>
-            <div className="modal-body">
-              {this.renderBody()}
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
+            {this.renderBody()}
           </div>
         </div>
       </div>
