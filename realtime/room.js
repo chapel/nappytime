@@ -1,6 +1,6 @@
 var yelp = require('../lib/yelp');
 var utils = require('../lib/serverUtils');
-var db = require('../lib/db');
+var db = require('../lib/db').defaultDB;
 var async = require('async');
 var _ = require('lodash');
 
@@ -35,8 +35,13 @@ function onCreate(options, callback) {
       return callback('Problem finding restaurants');
     }
 
-    res.room = 4444;//utils.roomGenerator();
-    callback(null, res);
+    utils.generateRoom(function (err, id) {
+      if (err) {
+        return callback(err);
+      }
+      res.room = id;
+      callback(null, res);
+    })
   });
 }
 
