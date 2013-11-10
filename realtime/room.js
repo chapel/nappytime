@@ -38,20 +38,30 @@ function onCreate(options, callback) {
 function onJoin(options, callback) {
   var socket = this;
 
-  socket.set('name', options.name, function (err) {
-    socket.join(options.room);
+  socket.join(options.room);
 
+  async.parallel([
+    function (next) {
+      socket.set('name', options.name, next);
+    },
+    function (next) {
+      socket.set('room', options.room, next);
+    }
+  ], function (err, data) {
     usersInRoom(options.room, function (err, users) {
       exports.publish({
         room: options.room,
         event: 'joined',
         data: {
-          joined: {name: options.name},
+          joined: {name: options.name, _id: socket.id},
           current: users
         }
       });
 
-      callback(null, users);
+      callback(null, {
+        me: {name: options.name, _id: socket.id},
+        current: users
+      });
     });
   });
 }
@@ -59,26 +69,27 @@ function onJoin(options, callback) {
 function onDisconnect() {
   var socket = this;
 
-  var rooms = io.sockets.manager.roomClients[socket.id];
-  if (!rooms) {
-    return false;
-  }
-
-  socket.get('name', function (err, name) {
-    _.each(rooms, function (val, room) {
-      room = room.substr(1);
-      if (room === '') {
-        return false;
-      }
-      usersInRoom(room, function (err, users) {
-        exports.publish({
-          room: room,
-          event: 'left',
-          data: {
-            left: {name: name},
-            current: users
-          }
-        });
+  async.parallel([
+    function (next) {
+      socket.get('name', next);
+    },
+    function (next) {
+      socket.get('room', next);
+    }
+  ], function (err, data) {
+    var name = data[0];
+    var room = data[1];
+    usersInRoom(room, function (err, users) {
+      users = _.filter(users, function (user) {
+        return user._id !== socket.id;
+      });
+      exports.publish({
+        room: room,
+        event: 'left',
+        data: {
+          left: {name: name, _id: socket.id},
+          current: users
+        }
       });
     });
   });
@@ -91,7 +102,7 @@ function usersInRoom(room, callback) {
 
   function iterator(socket, next) {
     socket.get('name', function (err, name) {
-      next(err, {name: name});
+      next(err, {name: name, _id: socket.id});
     });
   }
 }

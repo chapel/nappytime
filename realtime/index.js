@@ -14,6 +14,18 @@ function onConnection(socket) {
 module.exports = function wrapper(http) {
   realtime.io = socketio.listen(http);
 
+  realtime.io.enable('browser client minification');
+  realtime.io.enable('browser client etag');
+  realtime.io.enable('browser client gzip');
+  realtime.io.set('log level', 1);
+
+  realtime.io.set('transports', [
+      'websocket'
+    , 'htmlfile'
+    , 'xhr-polling'
+    , 'jsonp-polling'
+  ]);
+
   realtime.io.sockets.on('connection', onConnection);
 
   return realtime;
