@@ -10,23 +10,24 @@ var Room = module.exports = React.createClass({
     return {location: {}, categories: [], people: [], me: {}};
   },
   componentWillMount: function() {
+    var self = this;
     this.load();
+    room.onJoined(function (res) {
+      self.setState({people: res.current});
+    });
+    room.onLeft(function (res) {
+      self.setState({people: res.current});
+    });
   },
   load: function () {
     var self = this;
-    room.createRoom({location: roomLocation || 'mountain view'}, function (err, res) {
+    room.createRoom({location: roomLocation || 'mountain view', name: roomName}, function (err, res) {
       self.setState({
-        location: res.location, 
-        categories: res.categories, 
-        people: [
-          { name: 'Alice', id: '123', state: 'waiting' },
-          { name: 'Bob', id: '456', state: 'finished' },
-          { name: 'Charlie', id: '789', state: 'finished' }
-        ],
-        me: {
-          name: 'Alice',
-          isCreator: true
-        }
+        location: res.location,
+        categories: res.categories
+      });
+      room.joinRoom({room: res.room, name: 'foo'}, function (err, res) {
+        self.setState({people: res.current, me: res.me});
       });
     });
   },

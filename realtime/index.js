@@ -20,10 +20,10 @@ module.exports = function wrapper(http) {
   realtime.io.set('log level', 1);
 
   realtime.io.set('transports', [
-      'websocket'
-    , 'htmlfile'
-    , 'xhr-polling'
-    , 'jsonp-polling'
+    'websocket',
+    'htmlfile',
+    'xhr-polling',
+    'jsonp-polling'
   ]);
 
   realtime.io.sockets.on('connection', onConnection);

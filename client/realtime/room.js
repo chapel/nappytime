@@ -6,19 +6,16 @@ var event = utils.subEvent('room');
 exports.event = event;
 exports.socket = socket;
 
-socket.on(event('joined'), function (data) {
-  console.log(data);
-});
+exports.onJoined = function (callback) {
+  socket.on(event('joined'), callback);
+};
 
-socket.on(event('left'), function (data) {
-  console.log(data);
-});
+exports.onLeft = function (callback) {
+  socket.on(event('left'), callback);
+};
 
 exports.createRoom = function (options, callback) {
   socket.emit(event('create'), options, callback);
-  exports.joinRoom({room: '4444', name: 'foo'}, function (err, res) {
-    console.log(err, res);
-  });
 };
 
 exports.joinRoom = function (options, callback) {

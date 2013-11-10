@@ -18,7 +18,11 @@ exports.attach = function (socket, sio) {
   socket.on('leave', onDisconnect);
 };
 
-exports.publish = function (options) {
+exports.publish = function (options, socket) {
+  if (socket) {
+    return socket.broadcast.to(options.room).emit(event(options.event), options.data);
+  }
+
   return io.sockets.in(options.room).emit(event(options.event), options.data);
 };
 
@@ -31,6 +35,7 @@ function onCreate(options, callback) {
       return callback('Problem finding restaurants');
     }
 
+    res.room = 4444;//utils.roomGenerator();
     callback(null, res);
   });
 }
@@ -56,7 +61,7 @@ function onJoin(options, callback) {
           joined: {name: options.name, _id: socket.id},
           current: users
         }
-      });
+      }, socket);
 
       callback(null, {
         me: {name: options.name, _id: socket.id},
