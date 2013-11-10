@@ -99,6 +99,10 @@
   display: none;
 }
 
+[data-mode="frozen"] .btn-edit {
+  display: none;
+}
+
 [data-mode="winner"] .room-cat {
   display: none;
 }
@@ -116,6 +120,14 @@
 }
 
 [data-mode="winner"] .room-rest.winner {
+  display: block;
+}
+
+.room-people-new {
+  display: none;
+}
+
+.is-new .room-people-new {
   display: block;
 }
 

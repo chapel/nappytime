@@ -32,8 +32,19 @@ var RoomPane = module.exports = React.createClass({
   },
   toggleMode: function () {
     this.setState({
-      mode: (this.state.mode === 'edit' ? this.getFrozenState() : 'edit')
+      mode: (this.getMode() === 'edit' ? this.getFrozenState() : 'edit')
     });
+  },
+  getMode: function () {
+    var mode = "";
+    if (this.props.hasWinner) {
+      mode = 'winner';
+    } else if (this.state.mode === 'edit') {
+      mode = this.state.mode;
+    } else {
+      mode = this.getFrozenState();
+    }
+    return mode;
   },
   getCategories: function () {
     return this.props.parent.state.categories;
@@ -42,7 +53,7 @@ var RoomPane = module.exports = React.createClass({
     return this.props.parent.state.me;
   },
   clickChosen: function (isChosen, categoryIndex, restaurantIndex) {
-    if (this.state.mode === 'edit') {
+    if (this.getMode() === 'edit') {
       if (typeof(restaurantIndex) === 'undefined') {
         // toggling whole category
         var toggleCat = this.getCategories()[categoryIndex];
@@ -55,7 +66,7 @@ var RoomPane = module.exports = React.createClass({
         toggleEat.chosen = isChosen;
       }
       this.setState();
-    } else if (this.state.mode === 'frozen') {
+    } else if (this.getMode() === 'frozen') {
       // do nothing if in new mode
       if (this.props.parent.state.isNew) {
         return false;
@@ -114,7 +125,7 @@ var RoomPane = module.exports = React.createClass({
       return <RoomPaneCategory 
                 data={cat} 
                 index={index} 
-                mode={this.state.mode} 
+                mode={this.getMode()} 
                 choose={this.clickChosen} />;
     }, this);
     return (
@@ -126,7 +137,7 @@ var RoomPane = module.exports = React.createClass({
   },
   renderButtonEdit: function () {
     var buttonMessage = 'Edit';
-    if (this.state.mode === 'edit') {
+    if (this.getMode() === 'edit') {
       buttonMessage = 'Close';
     }
     return (
@@ -138,7 +149,7 @@ var RoomPane = module.exports = React.createClass({
   renderInfo: function () {
     var vetoes = this.state.vetoes || 0
       , roundChosen = this.state.roundChosen ? 1 : 0;
-    if (this.state.mode === 'frozen') {
+    if (this.getMode() === 'frozen') {
       return (
         <div className="room-info pull-right">
           <div><span className="badge">{vetoes}</span> vetoed</div>
@@ -152,7 +163,7 @@ var RoomPane = module.exports = React.createClass({
       return (
         <h4>And the winner is...</h4>
       );
-    } else if (this.state.mode === 'needChoice') {
+    } else if (this.getMode() === 'needChoice') {
       return (
         <h4>You need to pick at least one restaurant</h4>
       );
@@ -164,7 +175,7 @@ var RoomPane = module.exports = React.createClass({
   },
   renderButtonInit: function () {
     var buttonMessage = 'Done';
-    if (this.state.mode === 'frozen') {
+    if (this.getMode() === 'frozen') {
       return (
         <button type="button" className="pull-right btn btn-default" onClick={this.initDone}>
           {buttonMessage}
@@ -173,12 +184,8 @@ var RoomPane = module.exports = React.createClass({
     }
   },
   render: function () {
-    var mode = this.state.mode;
-    if (this.props.hasWinner) {
-      mode = 'winner';
-    }
     return (
-      <table className="table" data-mode={mode}>
+      <table className="table" data-mode={this.getMode()}>
         <tr>
           <td>
             {this.renderCallToAction()}

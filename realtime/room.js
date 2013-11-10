@@ -14,6 +14,7 @@ exports.attach = function (socket, sio) {
   socket.on(event('create'), onCreate);
   socket.on(event('join'), onJoin);
   socket.on(event('save'), onSave);
+  socket.on(event('load'), onLoad);
 
   socket.on('disconnect', onDisconnect);
   socket.on('leave', onDisconnect);
@@ -40,7 +41,7 @@ function onCreate(options, callback) {
       if (err) {
         return callback(err);
       }
-      res.room = id;
+      res.roomId = id;
       res.state = 'new';
       callback(null, res);
     })
@@ -49,16 +50,6 @@ function onCreate(options, callback) {
 
 function onSave(room, callback) {
   var socket = this;
-  // cleanup data
-  if (room.categories && room.categories.length) {
-    room.categories.forEach(function (cat) {
-      if (cat.restaurants && cat.restaurants.length) {
-        cat.restaurants.forEach(function (eat) {
-          delete eat.chosen;
-        });
-      }
-    });
-  }
 
   socket.get('serverId', function (err, id) {
     room.creator.serverId = id;
@@ -73,6 +64,10 @@ function onSave(room, callback) {
       return callback(null, room.roomId);
     });
   });
+}
+
+function onLoad(options, callback) {
+  db.get('room', options.roomId, callback);
 }
 
 function onJoin(options, callback) {

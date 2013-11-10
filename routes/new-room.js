@@ -12,6 +12,6 @@ module.exports = {
 
 function routeHandler(request, reply) {
   var context = _.extend({}, request.query, request.params, request.server.app.commonContext);
-  context.user = request.state.session.user.id;
+  context.user = request.state.session.user && request.state.session.user.id;
   reply.view('pages/room', context);
 }
