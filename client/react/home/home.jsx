@@ -33,8 +33,10 @@ var Home = module.exports = React.createClass({
     }
     return (
       <form onSubmit={this.handleSubmit}>
+        <label className="control-label">Nickname</label>
+        <input type="text" placeholder="What's your nickname?" ref="name" className="form-control" />
         <label className="control-label">Room Name</label>
-        <input type="text" placeholder="What's your office/team name?" ref="name" className="form-control" />
+        <input type="text" placeholder="What's your office/team name?" ref="roomname" className="form-control" />
         <label className="control-label">Location</label>
         <div className="input-group">
           <input type="text" placeholder="Where are you?" ref="location" className="form-control" />

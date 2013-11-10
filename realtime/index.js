@@ -7,7 +7,7 @@ var realtime = {};
 
 function onConnection(socket) {
   handlers.forEach(function (handler) {
-    handler.attach(socket);
+    handler.attach(socket, realtime.io);
   });
 }
 
