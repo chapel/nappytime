@@ -6,6 +6,18 @@ var handlers = utils.requireDir(__dirname, ['index.js']);
 var realtime = {};
 
 function onConnection(socket) {
+  socket.on('register', function (data) {
+    if (data.user.length !== 5) {
+      return;
+    }
+    socket.get('serverId', function (err, id) {
+      if (id) {
+        return;
+      }
+      socket.set('serverId', data.user);
+    });
+  });
+
   handlers.forEach(function (handler) {
     handler.attach(socket, realtime.io);
   });

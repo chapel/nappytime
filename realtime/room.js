@@ -50,14 +50,7 @@ function onJoin(options, callback) {
 
   socket.join(options.room);
 
-  async.parallel([
-    function (next) {
-      socket.set('name', options.name, next);
-    },
-    function (next) {
-      socket.set('room', options.room, next);
-    }
-  ], function (err, data) {
+  async.parallel(setUser(options, socket), function (err, data) {
     usersInRoom(options.room, function (err, users) {
       exports.publish({
         room: options.room,
@@ -79,14 +72,7 @@ function onJoin(options, callback) {
 function onDisconnect() {
   var socket = this;
 
-  async.parallel([
-    function (next) {
-      socket.get('name', next);
-    },
-    function (next) {
-      socket.get('room', next);
-    }
-  ], function (err, data) {
+  async.parallel(getUser(socket), function (err, data) {
     var name = data[0];
     var room = data[1];
     usersInRoom(room, function (err, users) {
@@ -115,4 +101,26 @@ function usersInRoom(room, callback) {
       next(err, {name: name, _id: socket.id});
     });
   }
+}
+
+function setUser(data, socket) {
+  return [
+    function (next) {
+      socket.set('name', data.name, next);
+    },
+    function (next) {
+      socket.set('room', data.room, next);
+    }
+  ];
+}
+
+function getUser(socket) {
+  return [
+    function (next) {
+      socket.get('name', next);
+    },
+    function (next) {
+      socket.get('room', next);
+    }
+  ];
 }

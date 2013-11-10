@@ -20,6 +20,14 @@ var hapiOptions = {
 };
 
 var server = Hapi.createServer('', port, hapiOptions);
+
+server.state('session', {
+  ttl: 10 * 24 * 60 * 60 * 1000,
+  isHttpOnly: true,
+  encoding: 'iron',
+  password: 'Y8v%an9!a;'
+});
+
 // global opts
 server.app.commonContext = {
   title: 'Nappytime Project'
