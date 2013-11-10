@@ -4,6 +4,7 @@ require('nko')('fYjH9Hq69TrED2ao');
 var Hapi = require('hapi');
 var _ = require('lodash');
 var realtime = require('./realtime');
+var utils = require('./lib/serverUtils');
 
 var isProduction = (process.env.NODE_ENV === 'production');
 var port = (isProduction ? 80 : 8000);
@@ -13,6 +14,7 @@ var hapiOptions = {
     engines: { 'hbs': 'handlebars' },
     path: __dirname + '/templates',
     partialsPath: __dirname + '/templates/pages',
+    helpersPath: __dirname + '/templates/helpers',
     layout: true
   }
 };
@@ -23,11 +25,7 @@ server.app.commonContext = {
   title: 'Nappytime Project'
 };
 
-server.route([ 
-  require('./routes/static'), 
-  require('./routes/index'), 
-  require('./routes/room')
-]);
+server.route(utils.requireDir(__dirname + '/routes'));
 
 server.pack.require('bucker', function (err) {
   if (err) console.error('failed loading bucker');

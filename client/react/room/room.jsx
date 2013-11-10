@@ -7,13 +7,16 @@ var RoomPeople = require('./room-people.jsx')
 
 var Room = module.exports = React.createClass({
   getInitialState: function () {
-    return {};
+    return {location: {}, categories: []};
   },
   componentWillMount: function() {
     this.load();
   },
   load: function () {
-    this.setState(this.props.res);
+    var self = this;
+    room.createRoom({location: roomLocation || 'mountain view'}, function (err, res) {
+      self.setState({location: res.location, categories: res.categories});
+    });
   },
   render: function () {
     return (
@@ -26,9 +29,7 @@ var Room = module.exports = React.createClass({
   }
 });
 
-room.createRoom({location: 'mountain view'}, function (err, res) {
-  React.renderComponent(
-    <Room url="/realtime" res={res} />,
-    document.getElementById('room-container')
-  );
-});
+React.renderComponent(
+  <Room url="/realtime" />,
+  document.getElementById('room-container')
+);

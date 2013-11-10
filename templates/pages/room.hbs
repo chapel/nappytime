@@ -4,7 +4,9 @@
   </div>
   {{> footer}}
 </div> <!-- /container -->
-{{> scripted}}
 <script>
-  window.__DEV__ = true;
+  roomLocation = '{{{location}}}';
+  roomName = '{{{name}}}';
 </script>
+{{> scripted}}
+<script src="/js/room.js"></script>
