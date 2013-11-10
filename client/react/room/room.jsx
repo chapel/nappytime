@@ -21,20 +21,41 @@ var Room = module.exports = React.createClass({
   },
   load: function () {
     var self = this;
-    room.createRoom({location: roomLocation || 'mountain view', name: roomName}, function (err, res) {
-      self.setState({
-        location: res.location,
-        categories: res.categories,
-        roomId: res.room,
-        isNew: res.state === 'new'
+    var path = window.location.pathname;
+    if (path === '/room/new') {
+      room.createRoom({location: roomLocation || 'mountain view', name: roomName}, function (err, res) {
+        self.setState({
+          location: res.location,
+          categories: res.categories,
+          roomId: res.room,
+          isNew: res.state === 'new'
+        });
+        /*
+        room.joinRoom({room: res.room, name: self.state.me.name}, function (err, res) {
+          self.setState({
+            people: res.current,
+            me: res.me
+          });
+        });
+        */
       });
-      room.joinRoom({room: res.room, name: self.state.me.name}, function (err, res) {
+    } else {
+      var roomId = path.substr(1).split('/')[1];
+      room.joinRoom({room: roomId, name: self.state.me.name}, function (err, res) {
+        if (err && err.code === 404) {
+          window.location.href = '/';
+          return;
+        }
         self.setState({
           people: res.current, 
-          me: res.me
+          me: res.me,
+          location: res.room.location,
+          categories: res.room.categories,
+          roomId: roomId,
+          isNew: false
         });
       });
-    });
+    }
   },
   saveRoom: function () {
     // serialize for saving

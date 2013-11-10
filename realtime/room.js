@@ -48,6 +48,7 @@ function onCreate(options, callback) {
 }
 
 function onSave(room, callback) {
+  var socket = this;
   // cleanup data
   if (room.categories && room.categories.length) {
     room.categories.forEach(function (cat) {
@@ -58,18 +59,19 @@ function onSave(room, callback) {
       }
     });
   }
-  async.parallel([
-    function (next) {
-      db.put('room', room.roomId, room, next);
-    },
-    function (next) {
-      db.put('user', room.creator._id, room.creator, next);
-    }
-  ], function (err, data) {
-    if (err) {
-      return callback(err);
-    }
-    return callback(null, room.roomId + ' was saved!');
+
+  socket.get('serverId', function (err, id) {
+    room.creator.serverId = id;
+    async.parallel([
+      function (next) {
+        db.put('room', room.roomId, room, next);
+      }
+    ], function (err, data) {
+      if (err) {
+        return callback(err);
+      }
+      return callback(null, room.roomId);
+    });
   });
 }
 
@@ -78,7 +80,24 @@ function onJoin(options, callback) {
 
   socket.join(options.room);
 
-  async.parallel(setUser(options, socket), function (err, data) {
+  var tasks = [
+    function (next) {
+      db.get('room', options.room, next);
+    },
+    function (next) {
+      socket.get('serverId', next);
+    }
+  ];
+
+  tasks = tasks.concat(setUser(options, socket));
+
+  async.parallel(tasks, function (err, data) {
+    var room = data[0];
+    var serverId = data[1];
+    if (!room) {
+      return callback({message: 'Not a valid room', code: 404});
+    }
+
     usersInRoom(options.room, function (err, users) {
       exports.publish({
         room: options.room,
@@ -90,8 +109,9 @@ function onJoin(options, callback) {
       }, socket);
 
       callback(null, {
-        me: {name: options.name, _id: socket.id},
-        current: users
+        me: {name: options.name, _id: socket.id, creator: serverId === room.creator.serverId},
+        current: users,
+        room: room
       });
     });
   });
@@ -149,6 +169,9 @@ function getUser(socket) {
     },
     function (next) {
       socket.get('room', next);
+    },
+    function (next) {
+      socket.get('serverId', next);
     }
   ];
 }
