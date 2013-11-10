@@ -32,6 +32,31 @@ var RoomPane = module.exports = React.createClass({
         toggleEat.chosen = isChosen;
       }
       this.setState();
+    } else {
+      // veto / roundChosen mode
+      if (typeof(restaurantIndex) === 'undefined') {
+        // veto by categories
+        var toggleCat = this.state.restaurants[categoryIndex];
+        toggleCat.veto = !toggleCat.veto;
+        if (toggleCat.veto) {
+          this.setState({ vetoes: (this.state.vetoes || 0) + 1 });
+        } else {
+          this.setState({ vetoes: (this.state.vetoes || 0) - 1 });
+        }
+      } else {
+        // toggling single restaurant
+        var toggleEat = this.state.restaurants[categoryIndex].value[restaurantIndex];
+        toggleEat.roundChosen = !toggleEat.roundChosen;
+        if (this.state.roundChosen) {
+          var ij = this.state.roundChosen;
+          delete this.state.restaurants[ij[0]].value[ij[1]].roundChosen;
+        }
+        if (toggleEat.roundChosen) {
+          this.setState({ roundChosen: [categoryIndex, restaurantIndex] });
+        } else {
+          this.setState({ roundChosen: null });
+        }
+      }
     }
   },
   doesCatHaveChosen: function (cat) {
@@ -66,16 +91,26 @@ var RoomPane = module.exports = React.createClass({
     if (this.state.mode === 'edit') {
       return (
         <button type="button" className="pull-right btn btn-default" onClick={this.toggleMode}>
-          &times;
+          close
         </button>
       );
     } else {
       return (
         <button type="button" className="pull-right btn btn-default" onClick={this.toggleMode}>
-          <span className="glyphicon glyphicon-edit"></span>
+          Edit
         </button>
       );
     }
+  },
+  renderInfo: function () {
+    var vetoes = this.state.vetoes || 0
+      , roundChosen = this.state.roundChosen ? 1 : 0;
+    return (
+      <div className="room-info pull-right">
+        <div><span className="badge">{vetoes}</span> vetoed</div>
+        <div><span className="badge">{roundChosen}</span> chosen</div>
+      </div>
+    );
   },
   render: function () {
     return (
@@ -88,6 +123,8 @@ var RoomPane = module.exports = React.createClass({
           </td>
           <td className="buttonRow">
             {this.renderButton()}
+            <div className="clearfix"></div>
+            {this.renderInfo()}
           </td>
         </tr>
       </table>

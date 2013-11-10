@@ -36,7 +36,7 @@ var RoomPaneCategory = module.exports = React.createClass({
       if (this.props.mode === 'edit') {
         return true;
       } else {
-        return this.doesCatHaveChosen();
+        return eat.chosen;
       }
     }, this)
     .map(function (eat, index) {

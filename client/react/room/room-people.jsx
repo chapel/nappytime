@@ -31,6 +31,9 @@ var PeoplePane = module.exports = React.createClass({
         }
       }
       msg = hasPicked + " of " + this.state.people.length + " have chosen";
+      return (
+        <h3>{msg}</h3>
+      )
     }
     return msg;
   },
@@ -44,21 +47,31 @@ var PeoplePane = module.exports = React.createClass({
   },
   renderPeople: function () {
     return this.state.people.map(function (person) {
-      return <li className="person {person.state}">{person.name}</li>
+      var personClass = 'pull-left label label-';
+      if (person.state === 'waiting') {
+        personClass += 'warning';
+      } else if (person.state === 'finished') {
+        personClass += 'success';
+      } else {
+        personClass += 'default';
+      }
+      return <div className={personClass}>{person.name}</div>
     });
   },
   renderLarge: function () {
     return (
-      <ul>
+      <div className="media">
         {this.renderPeople()}
-      </ul>
+      </div>
     );
   },
   render: function () {
     return (
-      <div className="row btn-link" data-mode={this.state.mode} onClick={this.toggleMode}>
-        {this.state.mode === 'small' ? this.renderSmall() : this.renderLarge()}
-      </div>
+      <nav className="navbar navbar-default navbar-fixed-top room-people" data-mode={this.state.mode} onClick={this.toggleMode}>
+        <div className="container">
+        { this.state.mode === 'small' ? this.renderSmall() : this.renderLarge()}
+        </div>
+      </nav>
     );
   }
 });

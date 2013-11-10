@@ -7,13 +7,33 @@
   line-height: 25px;
 }
 
+#room {
+  padding-top: 75px;
+}
+
 #room > div {
   padding: 5px;
   border: 1px solid black;
 }
 
+#room .table tr td {
+  border-width: 0;
+}
+
+#room .room-people {
+  cursor: pointer;
+}
+
+#room .room-people .label {
+  margin: 5px 0 0 5px;
+}
+
 .buttonRow {
-  width: 60px;
+  width: 100px;
+}
+
+.buttonRow .btn {
+  margin-bottom: 10px;
 }
 
 [data-mode="edit"] {
