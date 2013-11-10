@@ -36,31 +36,31 @@ function onCreate(options, callback) {
       return callback('Problem finding restaurants');
     }
 
-    utils.generateRoom(function (err, id) {
-      if (err) {
-        return callback(err);
-      }
-      res.roomId = id;
-      res.state = 'new';
-      callback(null, res);
-    })
+    res.state = 'new';
+    callback(null, res);
   });
 }
 
 function onSave(room, callback) {
   var socket = this;
 
-  socket.get('serverId', function (err, id) {
-    room.creator.serverId = id;
-    async.parallel([
-      function (next) {
-        db.put('room', room.roomId, room, next);
-      }
-    ], function (err, data) {
-      if (err) {
-        return callback(err);
-      }
-      return callback(null, room.roomId);
+  utils.generateRoom(function (err, roomId) {
+    if (err) {
+      return callback(err);
+    }
+    room.roomId = roomId;
+    socket.get('serverId', function (err, id) {
+      room.creator.serverId = id;
+      async.parallel([
+        function (next) {
+          db.put('room', roomId, room, next);
+        }
+      ], function (err, data) {
+        if (err) {
+          return callback(err);
+        }
+        return callback(null, roomId);
+      });
     });
   });
 }

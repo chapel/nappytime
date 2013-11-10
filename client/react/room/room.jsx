@@ -23,10 +23,13 @@ var Room = module.exports = React.createClass({
     var self = this;
     var path = window.location.pathname;
     if (path === '/room/new') {
-      if (typeof roomCoords === 'undefined' && typeof roomLocation === 'undefined') {
+      var hasCoords = typeof roomCoords !== 'undefined';
+      var hasLoc = typeof roomLocation !== 'undefined';
+      if (!hasCoords && !hasLoc) {
         window.location.href = '/';
       }
-      room.createRoom({location: roomCoords || roomLocation || 'mountain view', name: roomName}, function (err, res) {
+      var loc = hasCoords ? roomCoords : roomLocation;
+      room.createRoom({location: loc, name: roomName}, function (err, res) {
         self.setState({
           location: res.location,
           categories: res.categories,
