@@ -1,5 +1,5 @@
 var socketio = require('socket.io');
-var utils = require('../lib/utils');
+var utils = require('../lib/serverUtils');
 
 var handlers = utils.requireDir(__dirname, ['index.js']);
 
