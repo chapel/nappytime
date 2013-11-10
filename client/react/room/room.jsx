@@ -79,7 +79,8 @@ var Room = module.exports = React.createClass({
       }
     });
     room.saveRoom(serialized, function (err, res) {
-      console.log(arguments);
+      window.location.href = '/room/' + res;
+      return;
     });
   },
   chooseWinner: function () {

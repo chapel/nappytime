@@ -36,7 +36,7 @@ var Home = module.exports = React.createClass({
     return (
       <form onSubmit={this.handleSubmit}>
         <label className="control-label">Nickname</label>
-        <input type="text" placeholder="What's your nickname?" ref="name" className="form-control" />
+        <input type="text" value={store.get('name')} placeholder="What's your nickname?" ref="name" className="form-control" />
         <label className="control-label">Room Name</label>
         <input type="text" placeholder="What's your office/team name?" ref="roomname" className="form-control" />
         <label className="control-label">Location</label>
