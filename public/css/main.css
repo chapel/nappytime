@@ -11,11 +11,6 @@
   padding-top: 75px;
 }
 
-#room > div {
-  padding: 5px;
-  border: 1px solid black;
-}
-
 #room .table tr td {
   border-width: 0;
 }
@@ -122,4 +117,12 @@
 
 [data-mode="winner"] .room-rest.winner {
   display: block;
+}
+
+.is-new .room-people-child {
+  display: none;
+}
+
+.is-new .room-info {
+  display: none;
 }

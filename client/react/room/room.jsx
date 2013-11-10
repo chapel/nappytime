@@ -24,11 +24,41 @@ var Room = module.exports = React.createClass({
     room.createRoom({location: roomLocation || 'mountain view', name: roomName}, function (err, res) {
       self.setState({
         location: res.location,
-        categories: res.categories
+        categories: res.categories,
+        roomId: res.room,
+        isNew: res.state === 'new'
       });
       room.joinRoom({room: res.room, name: 'foo'}, function (err, res) {
-        self.setState({people: res.current, me: res.me});
+        self.setState({
+          people: res.current, 
+          me: res.me
+        });
       });
+    });
+  },
+  saveRoom: function () {
+    // serialize for saving
+    var serialized = {};
+    serialized.location = this.state.location;
+    serialized.creator = this.state.me;
+    serialized.roomId = this.state.roomId;
+    serialized.categories = [];
+    this.state.categories.forEach(function (cat) {
+      var restaurants = [];
+      for (var i = 0; i < cat.restaurants.length; i++) {
+        if (cat.restaurants[i].chosen) {
+          restaurants.push(cat.restaurants[i]);
+        }
+      }
+      if (restaurants.length) {
+        serialized.categories.push({
+          name: cat.name,
+          restaurants: restaurants
+        })
+      }
+    });
+    room.saveRoom(serialized, function (err, res) {
+      console.log(arguments);
     });
   },
   chooseWinner: function () {
@@ -44,8 +74,12 @@ var Room = module.exports = React.createClass({
     });
   },
   render: function () {
+    var roomClass = "";
+    if (this.state.isNew) {
+      roomClass += " is-new";
+    }
     return (
-      <div id="room">
+      <div id="room" className={roomClass}>
         <RoomPeople ref="people"
           parent={this} />
         <RoomPane ref="pane"

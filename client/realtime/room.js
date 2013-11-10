@@ -22,6 +22,10 @@ exports.joinRoom = function (options, callback) {
   socket.emit(event('join'), options, callback);
 };
 
+exports.saveRoom = function (options, callback) {
+  socket.emit(event('save'), options, callback);
+};
+
 exports.sendAction = function (options, callback) {
   socket.emit(event('action'), options, callback);
 };

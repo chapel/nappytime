@@ -24,7 +24,11 @@ var RoomPane = module.exports = React.createClass({
     }
   },
   initDone: function () {
-    this.props.parent.refs.modal.startCountdown();
+    if (this.props.parent.state.isNew) {
+      this.props.parent.saveRoom();
+    } else {
+      this.props.parent.refs.modal.startCountdown();
+    }
   },
   toggleMode: function () {
     this.setState({
@@ -52,6 +56,10 @@ var RoomPane = module.exports = React.createClass({
       }
       this.setState();
     } else if (this.state.mode === 'frozen') {
+      // do nothing if in new mode
+      if (this.props.parent.state.isNew) {
+        return false;
+      }
       // veto / roundChosen mode
       if (typeof(restaurantIndex) === 'undefined') {
         // veto by categories
@@ -121,13 +129,11 @@ var RoomPane = module.exports = React.createClass({
     if (this.state.mode === 'edit') {
       buttonMessage = 'Close';
     }
-    if (this.getMe().isCreator) {
-      return (
-        <button type="button" className="pull-right btn btn-default" onClick={this.toggleMode}>
-          {buttonMessage}
-        </button>
-      );
-    }
+    return (
+      <button type="button" className="btn-edit pull-right btn btn-default" onClick={this.toggleMode}>
+        {buttonMessage}
+      </button>
+    );
   },
   renderInfo: function () {
     var vetoes = this.state.vetoes || 0
@@ -147,19 +153,17 @@ var RoomPane = module.exports = React.createClass({
         <h4>And the winner is...</h4>
       );
     } else if (this.state.mode === 'needChoice') {
-      if (this.getMe().isCreator) {
-        return (
-          <h4>Click Edit and make your choices</h4>
-        );
-      } else {
-        return (
-          <h4>The owner of this room need to choose some options from the list first</h4>
-        );
-      }
+      return (
+        <h4>You need to pick at least one restaurant</h4>
+      );
+    } else if (this.props.parent.state.isNew) {
+      return (
+        <h4>Click Done to finalize your choices</h4>
+      );
     }
   },
   renderButtonInit: function () {
-    var buttonMessage = 'I\'m Done';
+    var buttonMessage = 'Done';
     if (this.state.mode === 'frozen') {
       return (
         <button type="button" className="pull-right btn btn-default" onClick={this.initDone}>

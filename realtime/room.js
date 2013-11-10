@@ -13,6 +13,7 @@ exports.attach = function (socket, sio) {
 
   socket.on(event('create'), onCreate);
   socket.on(event('join'), onJoin);
+  socket.on(event('save'), onSave);
 
   socket.on('disconnect', onDisconnect);
   socket.on('leave', onDisconnect);
@@ -40,8 +41,35 @@ function onCreate(options, callback) {
         return callback(err);
       }
       res.room = id;
+      res.state = 'new';
       callback(null, res);
     })
+  });
+}
+
+function onSave(room, callback) {
+  // cleanup data
+  if (room.categories && room.categories.length) {
+    room.categories.forEach(function (cat) {
+      if (cat.restaurants && cat.restaurants.length) {
+        cat.restaurants.forEach(function (eat) {
+          delete eat.chosen;
+        });
+      }
+    });
+  }
+  async.parallel([
+    function (next) {
+      db.put('room', room.roomId, room, next);
+    },
+    function (next) {
+      db.put('user', room.creator._id, room.creator, next);
+    }
+  ], function (err, data) {
+    if (err) {
+      return callback(err);
+    }
+    return callback(null, room.roomId + ' was saved!');
   });
 }
 
