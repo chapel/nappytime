@@ -3,3 +3,4 @@ node_modules
 .bower.json
 .module-cache
 bower_components
+.db

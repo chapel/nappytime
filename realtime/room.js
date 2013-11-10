@@ -1,5 +1,6 @@
 var yelp = require('../lib/yelp');
 var utils = require('../lib/serverUtils');
+var db = require('../lib/db');
 
 var event = utils.subEvent('room');
 

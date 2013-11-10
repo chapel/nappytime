@@ -3,34 +3,21 @@
 var PeoplePane = module.exports = React.createClass({
   getInitialState: function () {
     return {
-      mode: 'small',
-      people: []
+      mode: 'small'
     };
-  },
-  componentWillMount: function() {
-    this.load();
-  },
-  load: function () {
-    this.setState({
-      people: [
-        { name: 'Alice', id: '123', state: 'waiting' },
-        { name: 'Bob', id: '456', state: 'finished' },
-        { name: 'Charlie', id: '789', state: 'finished' }
-      ]
-    });
   },
   renderSmallMessage: function () {
     var msg = ""
       , hasPicked = 0;
-    if (!this.state.people.length) {
+    if (!this.props.people.length) {
       msg = "You're all alone...";
     } else {
-      for (var i = 0; i < this.state.people.length; i++) {
-        if (this.state.people[i].state === 'finished') {
+      for (var i = 0; i < this.props.people.length; i++) {
+        if (this.props.people[i].state === 'finished') {
           hasPicked += 1;
         }
       }
-      msg = hasPicked + " of " + this.state.people.length + " have chosen";
+      msg = hasPicked + " of " + this.props.people.length + " have chosen";
       return (
         <h3>{msg}</h3>
       )
@@ -46,7 +33,7 @@ var PeoplePane = module.exports = React.createClass({
     return this.renderSmallMessage();
   },
   renderPeople: function () {
-    return this.state.people.map(function (person) {
+    return this.props.people.map(function (person) {
       var personClass = 'pull-left label label-';
       if (person.state === 'waiting') {
         personClass += 'warning';

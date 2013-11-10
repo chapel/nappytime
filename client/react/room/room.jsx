@@ -7,7 +7,7 @@ var RoomPeople = require('./room-people.jsx')
 
 var Room = module.exports = React.createClass({
   getInitialState: function () {
-    return {location: {}, categories: []};
+    return {location: {}, categories: [], people: [], me: {}};
   },
   componentWillMount: function() {
     this.load();
@@ -15,7 +15,18 @@ var Room = module.exports = React.createClass({
   load: function () {
     var self = this;
     room.createRoom({location: roomLocation || 'mountain view'}, function (err, res) {
-      self.setState({location: res.location, categories: res.categories});
+      self.setState({
+        location: res.location, 
+        categories: res.categories, 
+        people: [
+          { name: 'Alice', id: '123', state: 'waiting' },
+          { name: 'Bob', id: '456', state: 'finished' },
+          { name: 'Charlie', id: '789', state: 'finished' }
+        ],
+        me: {
+          name: 'Alice'
+        }
+      });
     });
   },
   getModal: function () {
@@ -24,7 +35,7 @@ var Room = module.exports = React.createClass({
   render: function () {
     return (
       <div id="room">
-        <RoomPeople />
+        <RoomPeople people={this.state.people} />
         <RoomPane categories={this.state.categories} getModal={this.getModal}/>
         <RoomModal ref="modal" />
       </div>
