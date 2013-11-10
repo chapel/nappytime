@@ -14,6 +14,7 @@ exports.attach = function (socket, sio) {
   socket.on(event('create'), onCreate);
   socket.on(event('join'), onJoin);
   socket.on(event('save'), onSave);
+  socket.on(event('pick'), onPick);
 
   socket.on('disconnect', onDisconnect);
   socket.on('leave', onDisconnect);
@@ -105,6 +106,24 @@ function onJoin(options, callback) {
       });
     });
   });
+}
+
+function onPick(options, callback) {
+  var socket = this;
+
+  if (!options.roundId) {
+    utils.generateRoom(function (err, roundId) {
+      exports.publish({
+        room: options.room,
+        event: 'midvote',
+        data: {
+          roundId: roundId
+        }
+      });
+    });
+  } else {
+
+  }
 }
 
 function onDisconnect() {

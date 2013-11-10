@@ -26,6 +26,14 @@ exports.saveRoom = function (options, callback) {
   socket.emit(event('save'), options, callback);
 };
 
+exports.submitChoices = function (options, callback) {
+  socket.emit(event('pick'), options, callback);
+};
+
+exports.onMidVote = function (callback) {
+  socket.on(event('midvote'), callback);
+};
+
 exports.sendAction = function (options, callback) {
   socket.emit(event('action'), options, callback);
 };

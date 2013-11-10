@@ -103,6 +103,10 @@
   display: none;
 }
 
+[data-mode="winner"] .btn-edit {
+  display: none;
+}
+
 [data-mode="winner"] .room-cat {
   display: none;
 }

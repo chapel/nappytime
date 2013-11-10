@@ -27,6 +27,7 @@ var RoomPane = module.exports = React.createClass({
     if (this.props.parent.state.isNew) {
       this.props.parent.saveRoom();
     } else {
+      this.props.parent.submitChoices();
       this.props.parent.refs.modal.startCountdown();
     }
   },

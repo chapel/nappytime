@@ -18,6 +18,9 @@ var Room = module.exports = React.createClass({
     room.onLeft(function (res) {
       self.setState({people: res.current});
     });
+    room.onMidVote(function (res) {
+      self.setState({roundId: res.roundId});
+    });
   },
   load: function () {
     var self = this;
@@ -96,6 +99,12 @@ var Room = module.exports = React.createClass({
     winningRestaurant.wins = true;
     this.setState({
       hasWinner: true
+    });
+  },
+  submitChoices: function () {
+    room.submitChoices({
+      categories: this.state.categories,
+      roundId: this.state.roundId
     });
   },
   render: function () {
