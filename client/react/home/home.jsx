@@ -18,8 +18,10 @@ var Home = module.exports = React.createClass({
   },
   handleSubmit: function () {
     var options = {};
-    options.name = this.refs.name.getDOMNode().value.trim();
+    options.name = this.refs.roomname.getDOMNode().value.trim();
     options.location = this.refs.location.getDOMNode().value.trim();
+    var name = this.refs.name.getDOMNode().value.trim() || 'Anonymous';
+    store.set('name', name);
     if (!options.name || !options.location) {
       return false;
     }

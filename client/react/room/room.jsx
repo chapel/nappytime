@@ -7,7 +7,7 @@ var RoomPeople = require('./room-people.jsx')
 
 var Room = module.exports = React.createClass({
   getInitialState: function () {
-    return {location: {}, categories: [], people: [], me: {}};
+    return {location: {}, categories: [], people: [], me: {name: store.get('name') || 'Anonymous'}};
   },
   componentWillMount: function() {
     var self = this;
@@ -28,7 +28,7 @@ var Room = module.exports = React.createClass({
         roomId: res.room,
         isNew: res.state === 'new'
       });
-      room.joinRoom({room: res.room, name: 'foo'}, function (err, res) {
+      room.joinRoom({room: res.room, name: self.state.me.name}, function (err, res) {
         self.setState({
           people: res.current, 
           me: res.me
