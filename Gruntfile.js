@@ -51,7 +51,7 @@ module.exports = function (grunt) {
           external: ['realtime/room']
         },
         files: {
-          'public/js/room.js': ['client/react/*.jsx']
+          'public/js/components.js': ['client/react/*.jsx']
         }
       }
     },
