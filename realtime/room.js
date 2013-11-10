@@ -112,7 +112,7 @@ function onPick(options, callback) {
   var socket = this;
 
   if (!options.roundId) {
-    utils.generateRoom(function (err, roundId) {
+    utils.generator().generate(function (err, roundId) {
       exports.publish({
         room: options.room,
         event: 'midvote',
