@@ -10,6 +10,10 @@ socket.on(event('joined'), function (data) {
   console.log(data);
 });
 
+socket.on(event('left'), function (data) {
+  console.log(data);
+});
+
 exports.createRoom = function (options, callback) {
   socket.emit(event('create'), options, callback);
   exports.joinRoom({room: '4444', name: 'foo'}, function (err, res) {

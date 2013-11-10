@@ -2,6 +2,7 @@ var yelp = require('../lib/yelp');
 var utils = require('../lib/serverUtils');
 var db = require('../lib/db');
 var async = require('async');
+var _ = require('lodash');
 
 var event = utils.subEvent('room');
 
@@ -13,6 +14,8 @@ exports.attach = function (socket, sio) {
   socket.on(event('create'), onCreate);
   socket.on(event('join'), onJoin);
 
+  socket.on('disconnect', onDisconnect);
+  socket.on('leave', onDisconnect);
 };
 
 exports.publish = function (options) {
@@ -49,6 +52,34 @@ function onJoin(options, callback) {
       });
 
       callback(null, users);
+    });
+  });
+}
+
+function onDisconnect() {
+  var socket = this;
+
+  var rooms = io.sockets.manager.roomClients[socket.id];
+  if (!rooms) {
+    return false;
+  }
+
+  socket.get('name', function (err, name) {
+    _.each(rooms, function (val, room) {
+      room = room.substr(1);
+      if (room === '') {
+        return false;
+      }
+      usersInRoom(room, function (err, users) {
+        exports.publish({
+          room: room,
+          event: 'left',
+          data: {
+            left: {name: name},
+            current: users
+          }
+        });
+      });
     });
   });
 }
