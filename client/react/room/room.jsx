@@ -30,17 +30,27 @@ var Room = module.exports = React.createClass({
       });
     });
   },
-  getModal: function () {
-    return this.refs.modal;
+  chooseWinner: function () {
+    var categories = this.state.categories
+      , winningCatIndex = Math.floor(Math.random() * this.state.categories.length)
+      , winningCat = this.state.categories[winningCatIndex]
+      , winningRestaurantIndex = Math.floor(Math.random() * winningCat.restaurants.length)
+      , winningRestaurant = winningCat.restaurants[winningRestaurantIndex];
+    winningCat.wins = true;
+    winningRestaurant.wins = true;
+    this.setState({
+      hasWinner: true
+    });
   },
   render: function () {
     return (
       <div id="room">
-        <RoomPeople people={this.state.people} me={this.state.me} />
-        <RoomPane categories={this.state.categories} 
-          me={this.state.me}
-          getModal={this.getModal}/>
-        <RoomModal ref="modal" />
+        <RoomPeople ref="people"
+          parent={this} />
+        <RoomPane ref="pane"
+          parent={this} hasWinner={this.state.hasWinner} />
+        <RoomModal ref="modal" 
+          parent={this} />
       </div>
     );
   }

@@ -1,5 +1,5 @@
 /** @jsx React.DOM */
-var RoomCountdown = require('./room-countdown.jsx');
+var RoomCountdown = require('./room-countdown.jsx')
 
 var RoomModal = module.exports = React.createClass({
   getInitialState: function () {
@@ -13,7 +13,7 @@ var RoomModal = module.exports = React.createClass({
       .modal({backdrop: 'static', keyboard: false, show: false});
   },
   componentWillUnmount: function() {
-    $(this.getDOMNode()).off('hidden', this.handleHidden);
+    $(this.getDOMNode()).off('hidden');
   },
   close: function() {
     $(this.getDOMNode()).modal('hide');
@@ -27,13 +27,15 @@ var RoomModal = module.exports = React.createClass({
     });
     this.open();
   },
+  afterCountdown: function () {
+    this.close();
+    this.props.parent.chooseWinner();
+  },
   renderBody: function () {
     if (this.state.mode === 'countdown') {
       return (
-        <RoomCountdown countdown={30} />
+        <RoomCountdown countdown={1} onFinish={this.afterCountdown} />
       );
-    } else {
-      return <div></div>;
     }
   },
   render: function () {

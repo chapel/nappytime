@@ -39,6 +39,9 @@ var RoomPaneCategory = module.exports = React.createClass({
     } else {
       catClass += " not-chosen";
     }
+    if (cat.wins) {
+      catClass += " winner";
+    }
     var rendered = restaurants
     .map(function (eat, index) {
       return <RoomPaneRestaurant 

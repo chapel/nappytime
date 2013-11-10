@@ -12,8 +12,10 @@ var RoomModal = module.exports = React.createClass({
             countdown: countVal
           });
           setTimeout(function () {
-            if (countVal > 0) {
+            if (countVal > 1) {
               onCountdown(countVal - 1);
+            } else {
+              self.props.onFinish();
             }
           }, 1000);
         };
@@ -26,7 +28,7 @@ var RoomModal = module.exports = React.createClass({
   },
   render: function () {
     return (
-      <h2>{this.renderCountdown()}</h2>
+      <h2>Picking a winner in {this.renderCountdown()}</h2>
     );
   }
 });

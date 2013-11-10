@@ -1,7 +1,9 @@
 /** @jsx React.DOM */
+var RoomRestaurantDetails = require('./room-restaurant-details.jsx');
 
 var RoomPaneRestaurant = module.exports = React.createClass({
   getInitialState: function () {
+    return {};
   },
   onToggle: function (ev) {
     ev.preventDefault();
@@ -23,9 +25,13 @@ var RoomPaneRestaurant = module.exports = React.createClass({
     } else {
       eatClass += " not-chosen";
     }
+    if (eat.wins) {
+      eatClass += " winner";
+    }
     return (
       <li className={eatClass} onClick={this.onToggle}>
-        {eat.name} {this.renderLabel()}
+        <span className="small">{eat.name} {this.renderLabel()}</span>
+        <RoomRestaurantDetails data={eat} />
       </li>
     );
   }

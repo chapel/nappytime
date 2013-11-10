@@ -33,7 +33,7 @@
   width: 100px;
 }
 
-.buttonRow .btn {
+.buttonRow > * {
   margin-bottom: 10px;
 }
 
@@ -41,12 +41,22 @@
   margin-left: 5px;
 }
 
+.modal-content h2 {
+  margin-left: 10px;
+}
+
+.restaurant-details {
+  background-color: #fff;
+  padding: 5px;
+}
+
 .not-chosen {
   display: none;
 }
 
-[data-mode="needChoice"] .room-cat.not-chosen  {
+[data-mode="needChoice"] .room-cat  {
   display: block;
+  color: #ccc;
 }
 
 [data-mode="edit"] .not-chosen  {
@@ -75,4 +85,32 @@
 
 [data-mode="edit"] .room-rest.chosen {
   background-color: lightgreen;
+}
+
+[data-mode="edit"] .room-cat .small {
+  display: none;
+}
+
+[data-mode="frozen"] .room-cat .restaurant-details {
+  display: none;
+}
+
+[data-mode="winner"] .room-cat {
+  display: none;
+}
+
+[data-mode="winner"] .room-rest {
+  display: none;
+}
+
+[data-mode="winner"] .small {
+  display: none;
+}
+
+[data-mode="winner"] .room-cat.winner {
+  display: block;
+}
+
+[data-mode="winner"] .room-rest.winner {
+  display: block;
 }

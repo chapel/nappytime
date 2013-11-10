@@ -24,24 +24,30 @@ var RoomPane = module.exports = React.createClass({
     }
   },
   initDone: function () {
-    this.props.getModal().startCountdown();
+    this.props.parent.refs.modal.startCountdown();
   },
   toggleMode: function () {
     this.setState({
       mode: (this.state.mode === 'edit' ? this.getFrozenState() : 'edit')
     });
   },
+  getCategories: function () {
+    return this.props.parent.state.categories;
+  },
+  getMe: function () {
+    return this.props.parent.state.me;
+  },
   clickChosen: function (isChosen, categoryIndex, restaurantIndex) {
     if (this.state.mode === 'edit') {
       if (typeof(restaurantIndex) === 'undefined') {
         // toggling whole category
-        var toggleCat = this.props.categories[categoryIndex];
+        var toggleCat = this.getCategories()[categoryIndex];
         toggleCat.restaurants.forEach(function (eat) {
           eat.chosen = isChosen;
         }, this);
       } else {
         // toggling single restaurant
-        var toggleEat = this.props.categories[categoryIndex].restaurants[restaurantIndex];
+        var toggleEat = this.getCategories()[categoryIndex].restaurants[restaurantIndex];
         toggleEat.chosen = isChosen;
       }
       this.setState();
@@ -49,7 +55,7 @@ var RoomPane = module.exports = React.createClass({
       // veto / roundChosen mode
       if (typeof(restaurantIndex) === 'undefined') {
         // veto by categories
-        var toggleCat = this.props.categories[categoryIndex];
+        var toggleCat = this.getCategories()[categoryIndex];
         toggleCat.veto = !toggleCat.veto;
         if (toggleCat.veto) {
           this.setState({ vetoes: (this.state.vetoes || 0) + 1 });
@@ -58,11 +64,11 @@ var RoomPane = module.exports = React.createClass({
         }
       } else {
         // toggling single restaurant
-        var toggleEat = this.props.categories[categoryIndex].restaurants[restaurantIndex];
+        var toggleEat = this.getCategories()[categoryIndex].restaurants[restaurantIndex];
         toggleEat.roundChosen = !toggleEat.roundChosen;
         if (this.state.roundChosen) {
           var ij = this.state.roundChosen;
-          delete this.props.categories[ij[0]].restaurants[ij[1]].roundChosen;
+          delete this.getCategories()[ij[0]].restaurants[ij[1]].roundChosen;
         }
         if (toggleEat.roundChosen) {
           this.setState({ roundChosen: [categoryIndex, restaurantIndex] });
@@ -84,8 +90,8 @@ var RoomPane = module.exports = React.createClass({
   },
   isAnyCatChosen: function () {
     var hasChosen = false;
-    for (var i = 0; i < this.props.categories.length; i++) {
-      var cat = this.props.categories[i];
+    for (var i = 0; i < this.getCategories().length; i++) {
+      var cat = this.getCategories()[i];
       if (this.doesCatHaveChosen(cat)) {
         hasChosen = true;
         break;
@@ -95,7 +101,7 @@ var RoomPane = module.exports = React.createClass({
   },
   renderCategories: function () {
     var self = this;
-    var rendered = this.props.categories
+    var rendered = this.getCategories()
     .map(function (cat, index) {
       return <RoomPaneCategory 
                 data={cat} 
@@ -115,51 +121,69 @@ var RoomPane = module.exports = React.createClass({
     if (this.state.mode === 'edit') {
       buttonMessage = 'Close';
     }
-    return (
-      <button type="button" className="pull-right btn btn-default" onClick={this.toggleMode}>
-        {buttonMessage}
-      </button>
-    );
+    if (this.getMe().isCreator) {
+      return (
+        <button type="button" className="pull-right btn btn-default" onClick={this.toggleMode}>
+          {buttonMessage}
+        </button>
+      );
+    }
   },
   renderInfo: function () {
     var vetoes = this.state.vetoes || 0
       , roundChosen = this.state.roundChosen ? 1 : 0;
-    return (
-      <div className="room-info pull-right">
-        <div><span className="badge">{vetoes}</span> vetoed</div>
-        <div><span className="badge">{roundChosen}</span> chosen</div>
-      </div>
-    );
+    if (this.state.mode === 'frozen') {
+      return (
+        <div className="room-info pull-right">
+          <div><span className="badge">{vetoes}</span> vetoed</div>
+          <div><span className="badge">{roundChosen}</span> chosen</div>
+        </div>
+      );
+    }
   },
   renderCallToAction: function () {
-    if (this.state.mode === 'needChoice') {
+    if (this.props.hasWinner) {
       return (
-        <h4>Click Edit and make your choices</h4>
+        <h4>And the winner is...</h4>
       );
-    } else {
-      return;
+    } else if (this.state.mode === 'needChoice') {
+      if (this.getMe().isCreator) {
+        return (
+          <h4>Click Edit and make your choices</h4>
+        );
+      } else {
+        return (
+          <h4>The owner of this room need to choose some options from the list first</h4>
+        );
+      }
     }
   },
   renderButtonInit: function () {
     var buttonMessage = 'I\'m Done';
-    return (
-      <button type="button" className="pull-right btn btn-default" onClick={this.initDone}>
-        {buttonMessage}
-      </button>
-    );
+    if (this.state.mode === 'frozen') {
+      return (
+        <button type="button" className="pull-right btn btn-default" onClick={this.initDone}>
+          {buttonMessage}
+        </button>
+      );
+    }
   },
   render: function () {
+    var mode = this.state.mode;
+    if (this.props.hasWinner) {
+      mode = 'winner';
+    }
     return (
-      <table className="table" data-mode={this.state.mode}>
+      <table className="table" data-mode={mode}>
         <tr>
           <td>
             {this.renderCallToAction()}
             {this.renderCategories()}
           </td>
           <td className="buttonRow">
-            {this.renderButtonEdit()}
-            <div className="clearfix"></div>
             {this.renderInfo()}
+            <div className="clearfix"></div>
+            {this.renderButtonEdit()}
             <div className="clearfix"></div>
             {this.renderButtonInit()}
           </td>

@@ -6,20 +6,26 @@ var PeoplePane = module.exports = React.createClass({
       mode: 'small'
     };
   },
+  getPeople: function () {
+    return this.props.parent.state.people;
+  },
+  getMe: function () {
+    return this.props.parent.state.me;
+  },
   renderSmallMessage: function () {
     var msg = ""
       , hasPicked = 0
-      , me = this.props.me;
-    if (!this.props.people.length) {
+      , me = this.getMe();
+    if (!this.getPeople().length) {
       msg = "";
     } else {
-      for (var i = 0; i < this.props.people.length; i++) {
-        var person = this.props.people[i];
+      for (var i = 0; i < this.getPeople().length; i++) {
+        var person = this.getPeople()[i];
         if (person.state === 'finished') {
           hasPicked += 1;
         }
       }
-      msg = hasPicked + " of " + this.props.people.length + ", including me, have chosen";
+      msg = hasPicked + " of " + this.getPeople().length + ", including me, have chosen";
     }
     return <h3>{msg}</h3>;
   },
@@ -32,9 +38,9 @@ var PeoplePane = module.exports = React.createClass({
     return this.renderSmallMessage();
   },
   renderPeople: function () {
-    return this.props.people
+    return this.getPeople()
     .filter(function (person) {
-      return person.name !== this.props.me.name;
+      return person.name !== this.getMe().name;
     }, this)
     .map(function (person) {
       var personClass = 'pull-left label label-';
