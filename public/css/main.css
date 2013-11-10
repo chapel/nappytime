@@ -36,6 +36,26 @@
   margin-bottom: 10px;
 }
 
+.room-cat .label {
+  margin-left: 5px;
+}
+
+.not-chosen {
+  display: none;
+}
+
+[data-mode="needChoice"] .room-cat.not-chosen  {
+  display: block;
+}
+
+[data-mode="edit"] .not-chosen  {
+  display: block;
+}
+
+[data-mode="needChoice"]  {
+  cursor: pointer;
+}
+
 [data-mode="edit"] {
   cursor: pointer;
 }

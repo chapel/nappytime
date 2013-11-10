@@ -18,12 +18,15 @@ var Room = module.exports = React.createClass({
       self.setState({location: res.location, categories: res.categories});
     });
   },
+  getModal: function () {
+    return this.refs.modal;
+  },
   render: function () {
     return (
       <div id="room">
         <RoomPeople />
-        <RoomPane categories={this.state.categories}/>
-        <RoomModal />
+        <RoomPane categories={this.state.categories} getModal={this.getModal}/>
+        <RoomModal ref="modal" />
       </div>
     );
   }

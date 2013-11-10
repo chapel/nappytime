@@ -22,23 +22,24 @@ var RoomPaneCategory = module.exports = React.createClass({
     this.props.choose(!this.doesCatHaveChosen(), this.props.index);
     return false;
   },
+  renderLabel: function () {
+    if (this.props.mode === 'frozen' && this.props.data.veto) {
+      return (
+        <span className="label label-danger">Vetoed!</span>
+      );
+    }
+  },
   render: function () {
     var cat = this.props.data
       , name = cat.name
       , restaurants = cat.restaurants;
-    console.log(restaurants)
     var catClass = "list-group-item room-cat";
     if (this.doesCatHaveChosen()) {
       catClass += " chosen";
+    } else {
+      catClass += " not-chosen";
     }
     var rendered = restaurants
-    .filter(function (eat) {
-      if (this.props.mode === 'edit') {
-        return true;
-      } else {
-        return eat.chosen;
-      }
-    }, this)
     .map(function (eat, index) {
       return <RoomPaneRestaurant 
                 data={eat} 
@@ -49,7 +50,7 @@ var RoomPaneCategory = module.exports = React.createClass({
     }, this);
     return (
       <li className={catClass} onClick={this.onToggle}>
-        <h4>{name}</h4>
+        <h4>{name} {this.renderLabel()}</h4>
         <ul className="list-group">
           {rendered}
         </ul>
