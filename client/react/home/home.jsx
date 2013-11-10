@@ -19,9 +19,11 @@ var Home = module.exports = React.createClass({
   render: function () {
     return (
       <form onSubmit={this.handleSubmit}>
-        <input type="text" placeholder="What's your office/team name?" ref="name" />
-        <input type="text" placeholder="Where are you?" ref="location" />
-        <input type="submit" value="Create Room" class="btn" />
+        <label className="control-label">Room Name</label>
+        <input type="text" placeholder="What's your office/team name?" ref="name" className="form-control" />
+        <label className="control-label">Location</label>
+        <input type="text" placeholder="Where are you?" ref="location" className="form-control" />
+        <input type="submit" value="Create Room" className="btn btn-primary" />
       </form>
     );
   }
