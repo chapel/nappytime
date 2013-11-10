@@ -40,7 +40,7 @@ var PeoplePane = module.exports = React.createClass({
   renderPeople: function () {
     return this.getPeople()
     .filter(function (person) {
-      return person.name !== this.getMe().name;
+      return person._id !== this.getMe()._id;
     }, this)
     .map(function (person) {
       var personClass = 'pull-left label label-';
