@@ -60,6 +60,22 @@ var RoomPane = module.exports = React.createClass({
       mode: (this.state.mode === 'edit' ? 'frozen' : 'edit')
     });
   },
+  clickChosen: function (isChosen, categoryIndex, restaurantIndex) {
+    if (this.state.mode === 'edit') {
+      if (typeof(restaurantIndex) === 'undefined') {
+        // toggling whole category
+        var toggleCat = this.state.restaurants[categoryIndex];
+        toggleCat.value.forEach(function (eat) {
+          eat.chosen = isChosen;
+        }, this);
+      } else {
+        // toggling single restaurant
+        var toggleEat = this.state.restaurants[categoryIndex].value[restaurantIndex];
+        toggleEat.chosen = isChosen;
+      }
+      this.setState();
+    }
+  },
   doesCatHaveChosen: function (cat) {
     var hasChosen = false;
     for (var i = 0; i < cat.value.length; i++) {
@@ -80,7 +96,11 @@ var RoomPane = module.exports = React.createClass({
       }
     }, this)
     .map(function (cat, index) {
-      return <RoomPaneCategory data={cat} index={index} mode={this.state.mode} />;
+      return <RoomPaneCategory 
+                data={cat} 
+                index={index} 
+                mode={this.state.mode} 
+                choose={this.clickChosen} />;
     }, this);
   },
   renderButton: function () {

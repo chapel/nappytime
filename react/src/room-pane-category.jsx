@@ -17,6 +17,11 @@ var RoomPaneCategory = module.exports = React.createClass({
     }
     return hasChosen;
   },
+  onToggle: function (ev) {
+    ev.preventDefault();
+    this.props.choose(!this.doesCatHaveChosen(), this.props.index);
+    return false;
+  },
   render: function () {
     var cat = this.props.data
       , name = cat.name
@@ -34,10 +39,15 @@ var RoomPaneCategory = module.exports = React.createClass({
       }
     }, this)
     .map(function (eat, index) {
-      return <RoomPaneRestaurant data={eat} index={index} parentIndex={this.props.index} mode={this.props.mode} />;
+      return <RoomPaneRestaurant 
+                data={eat} 
+                index={index} 
+                parentIndex={this.props.index} 
+                mode={this.props.mode}
+                choose={this.props.choose} />;
     }, this);
     return (
-      <li className={catClass}>
+      <li className={catClass} onClick={this.onToggle}>
         <h4>{name}</h4>
         <ul className="list-group">
           {rendered}
