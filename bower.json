@@ -7,7 +7,10 @@
   },
   "exportsOverride": {
     "react": {
-      "js": "**/react.min.js"
+      "js": [
+        "**/react.min.js",
+        "**/react.js"
+      ]
     },
     "underscore": {
       "js": [

@@ -42,14 +42,14 @@ module.exports = function (grunt) {
         },
         files: {
           'public/js/main.js': ['client/*.js'],
-          'public/js/components.js': ['react/src/*.jsx']
+          'public/js/room.js': ['react/src/*.jsx']
         }
       }
     },
     watch: {
       jsx: {
         files: 'react/**/*.jsx',
-        tasks: ['react'],
+        tasks: ['browserify'],
         options: {
           debounceDelay: 250
         }

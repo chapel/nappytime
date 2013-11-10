@@ -12,6 +12,26 @@
   border: 1px solid black;
 }
 
-[data-mode="edit"] button.edit {
-  display: none;
+.buttonRow {
+  width: 60px;
+}
+
+[data-mode="edit"] {
+  cursor: pointer;
+}
+
+[data-mode="edit"] .room-cat {
+  background-color: lightpink;
+}
+
+[data-mode="edit"] .room-cat.chosen {
+  background-color: aliceblue;
+}
+
+[data-mode="edit"] .room-rest {
+  background-color: lightcoral;
+}
+
+[data-mode="edit"] .room-rest.chosen {
+  background-color: lightgreen;
 }

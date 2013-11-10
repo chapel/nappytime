@@ -1,5 +1,5 @@
 /** @jsx React.DOM */
-var Timer = React.createClass({
+var Timer = module.exports = React.createClass({
   getInitialState: function () {
     return { time: 'N/A' };
   },
@@ -24,8 +24,3 @@ var Timer = React.createClass({
     );
   }
 });
-
-React.renderComponent(
-  <Timer url="/time" pollInterval={2000} />,
-  document.getElementById('clock')
-);
