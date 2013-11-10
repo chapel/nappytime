@@ -19,7 +19,10 @@ var Room = module.exports = React.createClass({
       self.setState({people: res.current});
     });
     room.onMidVote(function (res) {
-      self.setState({roundId: res.roundId});
+      self.setState({startedBy: res.startedBy, startedAt: res.startedAt});
+    });
+    room.onWinnerPicked(function (res) {
+      self.setState({winner: res.winner});
     });
   },
   load: function () {
@@ -39,14 +42,6 @@ var Room = module.exports = React.createClass({
           roomId: res.room,
           isNew: res.state === 'new'
         });
-        /*
-        room.joinRoom({room: res.room, name: self.state.me.name}, function (err, res) {
-          self.setState({
-            people: res.current,
-            me: res.me
-          });
-        });
-        */
       });
     } else {
       var roomId = path.substr(1).split('/')[1];
@@ -61,7 +56,7 @@ var Room = module.exports = React.createClass({
           location: res.room.location,
           categories: res.room.categories,
           roomId: roomId,
-          isNew: false
+          isNew: false,
         });
       });
     }

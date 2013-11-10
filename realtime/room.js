@@ -8,6 +8,8 @@ var event = utils.subEvent('room');
 
 var io;
 
+var votingRooms = {};
+
 exports.attach = function (socket, sio) {
   io = sio;
 
@@ -102,8 +104,19 @@ function onJoin(options, callback) {
       callback(null, {
         me: {name: options.name, _id: socket.id, creator: serverId === room.creator.serverId},
         current: users,
-        room: room
+        room: room,
       });
+
+      var voting = votingRooms[room];
+      if (!voting) {
+        return;
+      }
+
+      if (voting.midvote) {
+        socket.emit(event('midvote'), voting.midvote);
+      } else if (voting.winner) {
+        socket.emit(event('winnerPicked'), {winner: voting.winner});
+      }
     });
   });
 }
@@ -111,19 +124,47 @@ function onJoin(options, callback) {
 function onPick(options, callback) {
   var socket = this;
 
-  if (!options.roundId) {
-    utils.generator().generate(function (err, roundId) {
+  if (!votingRooms[options.room]) {
+    votingRooms[options.room] = {
+      midvote: {
+        startedBy: socket.id,
+        startedAt: new Date()
+      },
+      winner: null,
+      timer: null
+    };
+
+    exports.publish({
+      room: options.room,
+      event: 'midvote',
+      data: {
+        startedBy: socket.id,
+        startedAt: new Date()
+      }
+    });
+  }
+
+  var voting = votingRooms[options.room];
+
+  if (voting.winner) {
+    return callback({message: 'Winner already chosen'});
+  }
+
+  if (!voting.midvote) {
+    voting.timer = setTimeout(function () {
       exports.publish({
         room: options.room,
-        event: 'midvote',
-        data: {
-          roundId: roundId
-        }
+        event: 'winnerPicked',
+        winner: ''
       });
-    });
-  } else {
-
+      voting.midvote = null;
+      voting.winner = 'winner';
+    }, 60 * 1000);
   }
+
+  socket.set('vote', options.categories, function (err) {
+    callback(null, 'Successfully voted');
+  });
 }
 
 function onDisconnect() {
