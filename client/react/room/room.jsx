@@ -22,6 +22,7 @@ var Room = module.exports = React.createClass({
       self.setState({startedBy: res.startedBy, startedAt: res.startedAt});
     });
     room.onWinnerPicked(function (res) {
+    	console.log(res)
       self.setState({winner: res.winner});
     });
   },
@@ -103,6 +104,8 @@ var Room = module.exports = React.createClass({
     room.submitChoices({
       categories: this.state.categories,
       roundId: this.state.roundId
+    }, function (err) {
+      console.log(err);
     });
   },
   render: function () {

@@ -112,10 +112,10 @@ function onJoin(options, callback) {
         return;
       }
 
-      if (voting.midvote) {
-        socket.emit(event('midvote'), voting.midvote);
-      } else if (voting.winner) {
+      if (voting.winner) {
         socket.emit(event('winnerPicked'), {winner: voting.winner});
+      } else if (voting.midvote) {
+        socket.emit(event('midvote'), voting.midvote);
       }
     });
   });
@@ -150,19 +150,54 @@ function onPick(options, callback) {
     return callback({message: 'Winner already chosen'});
   }
 
-  if (!voting.midvote) {
-    voting.timer = setTimeout(function () {
+  voting.timer = setTimeout(function () {
+    usersInRoom(options.room, function (err, users) {
+      var vetoes = [];
+      var votes = [];
+      users.forEach(function (vote) {
+        if (!vote) {
+          return false;
+        }
+        vetoes = _.uniq(vetoes.concat(vote.vetoes));
+        votes = votes.concat(vote.vote);
+      });
+      votes = _.countBy(votes);
+      var highest = -1;
+      var winner;
+      _.each(votes, function (count, key) {
+        if (count > highest) {
+          winner = key;
+          highest = count;
+        }
+      });
       exports.publish({
         room: options.room,
         event: 'winnerPicked',
-        winner: ''
+        data: {
+          winner: winner
+        }
       });
       voting.midvote = null;
-      voting.winner = 'winner';
-    }, 60 * 1000);
-  }
+      voting.winner = winner;
+    }, true);
+  }, 4 * 1000);
 
-  socket.set('vote', options.categories, function (err) {
+  var pick = {
+    vetoes: []
+  };
+  pick = options.categories.reduce(function (pick, cat, i) {
+    if (cat.veto) {
+      pick.vetoes.push(i);
+    }
+    var vote = _.findIndex(cat.restaurants, function (rest) {
+      return rest.roundChosen;
+    })
+    if (vote > -1) {
+      pick.vote = i + ':' + vote;
+    }
+    return pick;
+  }, pick);
+  socket.set('vote', pick, function (err) {
     callback(null, 'Successfully voted');
   });
 }
@@ -189,12 +224,15 @@ function onDisconnect() {
   });
 }
 
-function usersInRoom(room, callback) {
+function usersInRoom(room, callback, votes) {
   var sockets = io.sockets.clients(room);
 
   async.map(sockets, iterator, callback);
 
   function iterator(socket, next) {
+    if (votes) {
+      return socket.get('vote', next);
+    }
     socket.get('name', function (err, name) {
       next(err, {name: name, _id: socket.id});
     });

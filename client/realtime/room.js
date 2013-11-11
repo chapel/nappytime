@@ -34,7 +34,7 @@ exports.onMidVote = function (callback) {
   socket.on(event('midvote'), callback);
 };
 
-exports.onWinnerPick = function (callback) {
+exports.onWinnerPicked = function (callback) {
   socket.on(event('winnerPicked'), callback);
 };
 
